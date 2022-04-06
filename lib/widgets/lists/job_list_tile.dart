@@ -4,7 +4,7 @@ import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:substring_highlight/substring_highlight.dart';
 import 'package:tollo2/models/job.dart';
-import 'package:tollo2/providers/balance_model.dart';
+
 import 'package:tollo2/providers/groups_model.dart';
 import 'package:tollo2/providers/job_model.dart';
 import 'package:tollo2/services/formatters/date_full.dart';
@@ -44,31 +44,9 @@ class HomeJobListTile extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     if (Provider.of<GroupModel>(context).containedInAGroup(job))
-                      FittedBox(
-                        fit: BoxFit.scaleDown,
-                        child: GroupsTile(
-                            group: Provider.of<GroupModel>(context)
-                                .getGroupOfJob(job),
-                            size: size),
-                      ),
+                      containedInAGroup(context),
                     if (job.father != null)
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text('Father'),
-                          IconButton(
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) =>
-                                        new ViewJob(job: job.father!),
-                                  ),
-                                );
-                              },
-                              icon: Icon(Icons.account_tree_outlined)),
-                        ],
-                      ),
+                      buildFatherRow(context),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
@@ -83,23 +61,7 @@ class HomeJobListTile extends StatelessWidget {
                               showDialog(
                                 context: context,
                                 builder: (context) {
-                                  return AlertDialog(
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.all(
-                                        Radius.circular(15),
-                                      ),
-                                    ),
-                                    title: Text(
-                                        'Can\'t close Tollo (Sub Tollos are Not Done yet) '),
-                                    actions: [
-                                      ElevatedButton(
-                                        onPressed: () =>
-                                            Navigator.pop(context, true),
-                                        // passing true
-                                        child: Text('Ok'),
-                                      ),
-                                    ],
-                                  );
+                                  return buildAlertDialogSubTollosNotClosed(context);
                                 },
                               );
                             } else {
@@ -115,9 +77,6 @@ class HomeJobListTile extends StatelessWidget {
                                 if (exit) {
                                   job.done = true;
                                   if (job.points != null)
-                                    Provider.of<BalanceModel>(context,
-                                            listen: false)
-                                        .addBalance(job.points!);
                                   Provider.of<JobModel>(context, listen: false)
                                       .updateJob(job);
                                 }
@@ -131,13 +90,7 @@ class HomeJobListTile extends StatelessWidget {
                             size: size.shortestSide / 20,
                           ),
                         ),
-                        Icon(
-                          CupertinoIcons.circle_fill,
-                          size: size.shortestSide / 20,
-                          color: job.register!.stateOn
-                              ? Colors.green
-                              : Colors.grey,
-                        ),
+                        isRegisterOn(),
                       ],
                     ),
                     Divider(),
@@ -252,6 +205,64 @@ class HomeJobListTile extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+
+  AlertDialog buildAlertDialogSubTollosNotClosed(BuildContext context) {
+    return AlertDialog(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(15),
+                                    ),
+                                  ),
+                                  title: Text(
+                                      'Can\'t close Tollo (Sub Tollos are Not Done yet) '),
+                                  actions: [
+                                    ElevatedButton(
+                                      onPressed: () =>
+                                          Navigator.pop(context, true),
+                                      // passing true
+                                      child: Text('Ok'),
+                                    ),
+                                  ],
+                                );
+  }
+
+  Row buildFatherRow(BuildContext context) {
+    return Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text('Father'),
+                        IconButton(
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      new ViewJob(job: job.father!),
+                                ),
+                              );
+                            },
+                            icon: Icon(Icons.account_tree_outlined)),
+                      ],
+                    );
+  }
+
+  FittedBox containedInAGroup(BuildContext context) {
+    return FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: GroupsTile(
+                          group: Provider.of<GroupModel>(context)
+                              .getGroupOfJob(job),
+                          size: size),
+                    );
+  }
+
+  Icon isRegisterOn() {
+    return Icon(
+      CupertinoIcons.circle_fill,
+      size: size.shortestSide / 20,
+      color: job.register!.stateOn ? Colors.green : Colors.grey,
     );
   }
 }

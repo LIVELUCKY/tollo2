@@ -2,7 +2,6 @@ import 'package:easy_dynamic_theme/easy_dynamic_theme.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:tollo2/providers/balance_model.dart';
 import 'package:tollo2/providers/groups_model.dart';
 import 'package:tollo2/providers/job_model.dart';
 import 'package:tollo2/providers/note_model.dart';
@@ -45,34 +44,17 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                 Text('Active Alarms'),
                 IconButton(
                     onPressed: () {
-
                       Navigator.push(
                         context,
                         MaterialPageRoute(
                           builder: (context) => JobsAlarmsList(),
                         ),
                       );
-
                     },
-                    icon: Icon(CupertinoIcons.alarm,size: 30,)),
-              ]),
-              createLine([
-                Text('Current Balance:'),
-                FutureBuilder<int>(
-                  future: Provider.of<BalanceModel>(context).current(),
-                  // async work
-                  builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
-                    switch (snapshot.connectionState) {
-                      case ConnectionState.waiting:
-                        return Text('Loading....');
-                      default:
-                        if (snapshot.hasError)
-                          return Text('Error: ${snapshot.error}');
-                        else
-                          return Text('${snapshot.data.toString()}');
-                    }
-                  },
-                )
+                    icon: Icon(
+                      CupertinoIcons.alarm,
+                      size: 30,
+                    )),
               ]),
               Divider(),
               createLine([
@@ -100,6 +82,12 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                 Text('Total Images:'),
                 Text(
                     '${Provider.of<JobModel>(context).getImagesTotal().length}'),
+              ]),
+              Divider(),
+              createLine([
+                Text('Total Audios:'),
+                Text(
+                    '${Provider.of<JobModel>(context).getAudiosTotal().length}'),
               ]),
               Divider(),
               createLine([
