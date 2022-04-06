@@ -5,8 +5,6 @@ import 'package:tollo2/widgets/components/custom_floating_circular_btn.dart';
 import 'package:tollo2/widgets/forms/newGroup.dart';
 import 'package:tollo2/widgets/forms/newJob.dart';
 import 'package:tollo2/widgets/forms/newNote.dart';
-import 'package:tollo2/widgets/forms/newReward.dart';
-
 import 'bottom_routes.dart';
 
 class BottomMainNavigator extends StatefulWidget {
@@ -59,11 +57,6 @@ class _BottomMainNavigatorState extends State<BottomMainNavigator> {
                 context,
                 MaterialPageRoute(builder: (context) => NewNote()),
               );
-            } else if (selectedPage == 3) {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => NewReward()),
-              );
             } else {
               print(selectedPage.toString());
             }
@@ -87,7 +80,7 @@ class _BottomMainNavigatorState extends State<BottomMainNavigator> {
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                for (int i = 3; i < 6; i++) buildIBottomBarButton(i),
+                for (int i = 3; i < 5; i++) buildIBottomBarButton(i),
               ],
             ),
           ],

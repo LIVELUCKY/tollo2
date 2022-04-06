@@ -3,7 +3,7 @@ import 'package:provider/single_child_widget.dart';
 import 'package:tollo2/providers/balance_model.dart';
 import 'package:tollo2/providers/groups_model.dart';
 import 'package:tollo2/providers/note_model.dart';
-import 'package:tollo2/providers/rewards_model.dart';
+
 
 import 'job_model.dart';
 
@@ -12,7 +12,6 @@ List<SingleChildWidget> providers() {
     ChangeNotifierProvider<JobModel>(create: (_) => JobModel()),
     ChangeNotifierProvider<GroupModel>(create: (_) => GroupModel()),
     ChangeNotifierProvider<NoteModel>(create: (_) => NoteModel()),
-    ChangeNotifierProvider<RewardModel>(create: (_) => RewardModel()),
     ChangeNotifierProvider<BalanceModel>(create: (_) => BalanceModel()),
   ];
 }

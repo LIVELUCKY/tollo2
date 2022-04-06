@@ -6,7 +6,7 @@ import 'package:tollo2/providers/balance_model.dart';
 import 'package:tollo2/providers/groups_model.dart';
 import 'package:tollo2/providers/job_model.dart';
 import 'package:tollo2/providers/note_model.dart';
-import 'package:tollo2/providers/rewards_model.dart';
+
 
 class SettingsWidget extends StatefulWidget {
   const SettingsWidget({Key? key}) : super(key: key);
@@ -73,11 +73,7 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                 Text('Total Notes:'),
                 Text('${Provider.of<NoteModel>(context).notes.length}'),
               ]),
-              Divider(),
-              createLine([
-                Text('Total Rewards:'),
-                Text('${Provider.of<RewardModel>(context).rewards.length}'),
-              ]),
+
               Divider(),
               createLine([
                 Text('Total Records:'),
