@@ -74,13 +74,13 @@ class _BottomMainNavigatorState extends State<BottomMainNavigator> {
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                for (int i = 0; i < 3; i++) buildIBottomBarButton(i),
+                for (int i = 0; i < 2; i++) buildIBottomBarButton(i),
               ],
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                for (int i = 3; i < 5; i++) buildIBottomBarButton(i),
+                for (int i = 2; i < 4; i++) buildIBottomBarButton(i),
               ],
             ),
           ],

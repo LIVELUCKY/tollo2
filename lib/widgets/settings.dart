@@ -7,6 +7,7 @@ import 'package:tollo2/providers/groups_model.dart';
 import 'package:tollo2/providers/job_model.dart';
 import 'package:tollo2/providers/note_model.dart';
 
+import 'lists/jobs_alarms_list.dart';
 
 class SettingsWidget extends StatefulWidget {
   const SettingsWidget({Key? key}) : super(key: key);
@@ -41,6 +42,21 @@ class _SettingsWidgetState extends State<SettingsWidget> {
               ]),
               Divider(),
               createLine([
+                Text('Active Alarms'),
+                IconButton(
+                    onPressed: () {
+
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => JobsAlarmsList(),
+                        ),
+                      );
+
+                    },
+                    icon: Icon(CupertinoIcons.alarm,size: 30,)),
+              ]),
+              createLine([
                 Text('Current Balance:'),
                 FutureBuilder<int>(
                   future: Provider.of<BalanceModel>(context).current(),
@@ -73,7 +89,6 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                 Text('Total Notes:'),
                 Text('${Provider.of<NoteModel>(context).notes.length}'),
               ]),
-
               Divider(),
               createLine([
                 Text('Total Records:'),
