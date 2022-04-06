@@ -401,13 +401,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.17.0"
-  intro_views_flutter:
-    dependency: "direct main"
-    description:
-      name: intro_views_flutter
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "3.2.0"
   io:
     dependency: transitive
     description:
@@ -640,7 +633,7 @@ packages:
     source: hosted
     version: "0.27.1"
   shared_preferences:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: shared_preferences
       url: "https://pub.dartlang.org"
