@@ -44,6 +44,7 @@ dependencies:
   substring_highlight: ^1.0.33
   easy_dynamic_theme: ^2.2.0
   flutter_local_notifications: ^8.1.1+1
+  time_chart: ^0.3.3
 
 
   # The following adds the Cupertino Icons font to your application.

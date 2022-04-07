@@ -96,7 +96,7 @@ class _NotesListState extends State<NotesList> {
                     ],
                   ),
                   size: size / 4),
-              color: Theme.of(context).cardColor,
+
               size: size),
         );
       },

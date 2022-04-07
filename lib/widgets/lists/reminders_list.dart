@@ -81,7 +81,7 @@ class _RemindersListState extends State<RemindersList> {
                         ))
                   ],
                 ),
-                color: color,
+
                 size: size);
           },
         ),

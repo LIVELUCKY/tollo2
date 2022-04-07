@@ -69,7 +69,7 @@ class _ViewNoteState extends State<ViewNote> {
                     formatFull(widget.note.createdAt),
                   ),
                 ),
-                color: cardColor,
+
                 size: size),
             CustomCard(
                 widget: Row(
@@ -87,7 +87,7 @@ class _ViewNoteState extends State<ViewNote> {
                     ),
                   ],
                 ),
-                color: cardColor,
+
                 size: size)
           ],
         ),

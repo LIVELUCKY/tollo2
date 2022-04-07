@@ -446,7 +446,7 @@ class _ViewJobState extends State<ViewJob> {
                       DropDownCustom(
                           widget: SizedBox(
                             width: size.shortestSide / 4,
-                            height: size.longestSide,
+                            height: size.longestSide/2,
                             child: HomeList(
                               job: widget.job,
                             ),

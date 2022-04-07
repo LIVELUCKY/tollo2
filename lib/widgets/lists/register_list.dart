@@ -47,7 +47,6 @@ class _RegisterNotesListState extends State<RegisterNotesList> {
                       job: widget.job,
                       scale: size.aspectRatio * 10,
                     ),
-                    color: Color(widget.job.categoryColor),
                     size: size),
               ],
             ),
@@ -120,7 +119,7 @@ class _RegisterNotesListState extends State<RegisterNotesList> {
                     ),
                   ],
                 ),
-                color: Color(widget.job.categoryColor),
+
                 size: size),
           ],
         ),

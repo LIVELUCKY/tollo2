@@ -32,86 +32,89 @@ class _JobsAlarmsListState extends State<JobsAlarmsList> {
             element.reminder.isNotEmpty))
         .toList();
     if (jobs != []) jobs = sortJobsByAlarm(jobs);
-    return ListView.builder(
-      itemCount: jobs.length + 1,
-      itemBuilder: (context, index) {
-        if (index == 0)
-          return Card(
-            child: Column(
-              children: [
-                Row(
-                  children: [
-                    Expanded(
-                      child: TextField(
-                        onChanged: (value) {
-                          searched = value;
-                        },
-                        textInputAction: TextInputAction.search,
-                        onSubmitted: (value) {
-                          setState(() {});
-                        },
-                        decoration: InputDecoration(
-                          hintText: 'Search In Your Dairy',
-                          // border: InputBorder.none,
-                          // focusedBorder: UnderlineInputBorder(),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          );
-        Job job = jobs[index - 1];
-
-        return GestureDetector(
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => ViewJob(job: job),
-              ),
-            );
-          },
-          child: CustomCard(
-              widget: DropDownCustom(
-                  widget: Row(
+    return Scaffold(
+      body: ListView.builder(
+        itemCount: jobs.length + 1,
+        itemBuilder: (context, index) {
+          if (index == 0)
+            return Card(
+              child: Column(
+                children: [
+                  Row(
                     children: [
-                      Flexible(
-                        flex: 3,
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: FittedBox(
-                            fit: BoxFit.scaleDown,
-                            child: TimerBuilder.periodic(
-                              Duration(seconds: 1),
-                              builder: (context) {
-                                Duration count =
-                                    getNearstReminder(job, DateTime.now())
-                                        .clockBegin!
-                                        .difference(DateTime.now());
-                                return Text(durationFormatter(
-                                    count.isNegative ? Duration.zero : count));
-                              },
-                            ),
+                      Expanded(
+                        child: TextField(
+                          onChanged: (value) {
+                            searched = value;
+                          },
+                          textInputAction: TextInputAction.search,
+                          onSubmitted: (value) {
+                            setState(() {});
+                          },
+                          decoration: InputDecoration(
+                            hintText: 'Search In Your the active alarms',
+                            // border: InputBorder.none,
+                            // focusedBorder: UnderlineInputBorder(),
                           ),
-                        ),
-                      ),
-                      Flexible(
-                        flex: 7,
-                        child: Text(
-                          job.note!.note,
-                          softWrap: true,
-                          overflow: TextOverflow.fade,
                         ),
                       ),
                     ],
                   ),
-                  size: size / 4),
-              color: Theme.of(context).cardColor,
-              size: size),
-        );
-      },
+                ],
+              ),
+            );
+          Job job = jobs[index - 1];
+
+          return GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ViewJob(job: job),
+                ),
+              );
+            },
+            child: CustomCard(
+                widget: DropDownCustom(
+                    widget: Row(
+                      children: [
+                        Flexible(
+                          flex: 3,
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: FittedBox(
+                              fit: BoxFit.scaleDown,
+                              child: TimerBuilder.periodic(
+                                Duration(seconds: 1),
+                                builder: (context) {
+                                  Duration count =
+                                      getNearstReminder(job, DateTime.now())
+                                          .clockBegin!
+                                          .difference(DateTime.now());
+                                  return Text(durationFormatter(
+                                      count.isNegative
+                                          ? Duration.zero
+                                          : count));
+                                },
+                              ),
+                            ),
+                          ),
+                        ),
+                        Flexible(
+                          flex: 7,
+                          child: Text(
+                            job.note!.note,
+                            softWrap: true,
+                            overflow: TextOverflow.fade,
+                          ),
+                        ),
+                      ],
+                    ),
+                    size: size / 4),
+                size: size),
+          );
+        },
+      ),
     );
   }
 }
