@@ -52,7 +52,7 @@ class _ViewNoteState extends State<ViewNote> {
                   ),
                   IconButton(
                     onPressed: () async {
-                      Provider.of<NoteModel>(context).deleteNote(widget.note);
+                      Provider.of<NoteModel>(context,listen: false).deleteNote(widget.note);
                       Navigator.pop(context);
                     },
                     icon: Icon(

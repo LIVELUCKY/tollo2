@@ -3,8 +3,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
-import 'package:tollo2/models/job.dart';
 import 'package:tollo2/models/group.dart';
+import 'package:tollo2/models/job.dart';
 import 'package:tollo2/providers/job_model.dart';
 import 'package:tollo2/services/sort_by_searched.dart';
 import 'package:tollo2/widgets/lists/job_list_tile.dart';
@@ -23,7 +23,7 @@ class HomeList extends StatefulWidget {
 
 class _HomeListState extends State<HomeList> {
   String searched = '';
-  bool children = false;
+  bool children = true;
   late List<Job> jobs;
 
   @override
@@ -51,42 +51,7 @@ class _HomeListState extends State<HomeList> {
       shrinkWrap: true,
       itemCount: jobs.length + 1,
       itemBuilder: (context, index) {
-        if (index == 0)
-          return Card(
-            child: Column(
-              children: [
-                Row(
-                  children: [
-                    Expanded(
-                      child: TextField(
-                        onChanged: (value) {
-                          searched = value;
-                        },
-                        textInputAction: TextInputAction.search,
-                        onSubmitted: (value) {
-                          setState(() {});
-                        },
-                        decoration: InputDecoration(
-                          hintText: 'Search Jobs',
-                          // border: InputBorder.none,
-                          // focusedBorder: UnderlineInputBorder(),
-                        ),
-                      ),
-                    ),
-                    IconButton(
-                        onPressed: () {
-                          children = !children;
-                          setState(() {});
-                        },
-                        icon: Icon(children
-                            ? Icons.account_tree
-                            : Icons.account_tree_outlined))
-                  ],
-                ),
-                if (widget.widget != null) widget.widget!
-              ],
-            ),
-          );
+        if (index == 0) return searchField();
 
         return HomeJobListTile(
           searched: searched,
@@ -95,6 +60,51 @@ class _HomeListState extends State<HomeList> {
         );
       },
     );
+  }
+
+  Card searchField() {
+    return Card(
+      child: Column(
+        children: [
+          Row(
+            children: [
+              Expanded(
+                child: TextField(
+                  onChanged: (value) {
+                    searched = value;
+                  },
+                  textInputAction: TextInputAction.search,
+                  onSubmitted: (value) {
+                    setState(() {});
+                  },
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(2.0),
+                    ),
+                    hintText: 'Search Jobs...',
+                    // border: InputBorder.none,
+                    // focusedBorder: UnderlineInputBorder(),
+                  ),
+                ),
+              ),
+              jobsTreeSwitcher()
+            ],
+          ),
+          if (widget.widget != null) widget.widget!
+        ],
+      ),
+    );
+  }
+
+  IconButton jobsTreeSwitcher() {
+    return IconButton(
+        onPressed: () {
+          children = !children;
+          setState(() {});
+        },
+        icon: Icon(children
+            ? Icons.account_tree_outlined
+            : Icons.account_tree_rounded));
   }
 
   bool topFather(Job element) => element.father == null;
