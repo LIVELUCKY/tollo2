@@ -55,6 +55,7 @@ class _ViewJobState extends State<ViewJob> {
     Size size = MediaQuery.of(context).size;
     List<Job> jobs = [];
     if (widget.job.children != null) jobs = widget.job.children!.toList();
+    var indent2 = size.shortestSide / 8;
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
@@ -119,6 +120,78 @@ class _ViewJobState extends State<ViewJob> {
                         color: Colors.red.shade400,
                       ),
                     ),
+                    IconButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => RemindersList(
+                                    job: widget.job,
+                                    callback: () {
+                                      setState(() {});
+                                    },
+                                  )),
+                        );
+                      },
+                      icon: Icon(CupertinoIcons.alarm),
+                    ),
+                    IconButton(
+                      onPressed: () {
+                        if (widget.job.done) return;
+                        if (widget.job.children!
+                                .where((element) => element.done == false)
+                                .toList()
+                                .length !=
+                            0) {
+                          showDialog(
+                            context: context,
+                            builder: (context) {
+                              return AlertDialog(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(15),
+                                  ),
+                                ),
+                                title: Text(
+                                    'Can\'t close Tollo (Sub Tollos are Not Done yet) '),
+                                actions: [
+                                  ElevatedButton(
+                                    onPressed: () =>
+                                        Navigator.pop(context, true),
+                                    // passing true
+                                    child: Text('Ok'),
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                        } else {
+                          showDialog(
+                            context: context,
+                            builder: (context) {
+                              return CustomDialog(
+                                  question:
+                                      'Are you sure You want to delete this Tollo');
+                            },
+                          ).then((exit) {
+                            if (exit == null) return;
+                            if (exit) {
+                              widget.job.done = true;
+
+                              Provider.of<JobModel>(context, listen: false)
+                                  .updateJob(widget.job);
+                              setState(() {});
+                            }
+                          });
+                        }
+                      },
+                      icon: Icon(
+                        widget.job.done
+                            ? CupertinoIcons.checkmark_rectangle
+                            : CupertinoIcons.square,
+                        size: size.shortestSide / 20,
+                      ),
+                    )
                   ],
                 ),
               ),
@@ -129,7 +202,6 @@ class _ViewJobState extends State<ViewJob> {
                         "Done At : " + formatFull(widget.job.doneAt!),
                       ),
                     ),
-                    color: color,
                     size: size),
               if (fathers.length != 0) BreadCrumbs(jobs: fathers, size: size),
               CustomCard(
@@ -138,33 +210,8 @@ class _ViewJobState extends State<ViewJob> {
                       "Created At : " + formatFull(widget.job.note!.createdAt),
                     ),
                   ),
-                  color: color,
                   size: size),
-              CustomCard(
-                  widget: DropDownCustom(
-                    size: size,
-                    widget: new Text(
-                      widget.job.note!.note,
-                      softWrap: true,
-                      overflow: TextOverflow.fade,
-                    ),
-                  ),
-                  color: color,
-                  size: size),
-              CustomCard(
-                  widget: widget.job.points == null
-                      ? buildRowCheckBox(
-                          size,
-                          Text("Pointless"),
-                        )
-                      : buildRowCheckBox(
-                          size,
-                          Text(
-                            "Points : " + widget.job.points.toString(),
-                          ),
-                        ),
-                  color: color,
-                  size: size),
+              buildDivider(color, size, indent2),
               if (widget.job.deadLine != null)
                 CustomCard(
                     widget: Center(
@@ -193,175 +240,161 @@ class _ViewJobState extends State<ViewJob> {
                         ],
                       ),
                     ),
-                    color: color,
                     size: size),
-              if (widget.job.reminder != null)
-                CustomCard(
-                    widget: Center(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            '${widget.job.reminder.length}  Reminders ',
-                          ),
-                          IconButton(
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => RemindersList(
-                                          job: widget.job,
-                                          callback: () {
-                                            setState(() {});
-                                          },
-                                        )),
-                              );
-                            },
-                            icon: Icon(CupertinoIcons.alarm),
-                          ),
-                        ],
-                      ),
+              buildDivider(color, size, indent2),
+              CustomCard(
+                  widget: DropDownCustom(
+                    size: size,
+                    widget: new Text(
+                      widget.job.note!.note,
+                      softWrap: true,
+                      overflow: TextOverflow.fade,
                     ),
-                    color: color,
-                    size: size),
+                  ),
+                  size: size),
+              buildDivider(color, size, indent2),
               if (widget.job.register != null)
                 CustomCard(
                     widget: Center(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: (widget.job.register != null)
-                            ? [
-                                Flexible(
-                                  flex: 1,
-                                  child: IconButton(
-                                    onPressed: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              RegisterNotesList(
-                                                  job: widget.job),
+                      child: Column(
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: (widget.job.register != null)
+                                ? [
+                                    Flexible(
+                                      flex: 1,
+                                      child: IconButton(
+                                        onPressed: () {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  RegisterNotesList(
+                                                      job: widget.job),
+                                            ),
+                                          );
+                                        },
+                                        icon: Icon(
+                                          CupertinoIcons
+                                              .list_bullet_below_rectangle,
+                                          size: size.shortestSide / 20,
                                         ),
-                                      );
-                                    },
-                                    icon: Icon(
-                                      CupertinoIcons
-                                          .list_bullet_below_rectangle,
-                                      size: size.shortestSide / 20,
-                                    ),
-                                  ),
-                                ),
-                                if (widget.job.register!.stateOn)
-                                  Flexible(
-                                    flex: 2,
-                                    child: TimerBuilder.periodic(
-                                        Duration(
-                                            seconds: 1), //updates every second
-                                        builder: (context) {
-                                      return Text(
-                                        durationFormatter(
-                                          widget.job.register!
-                                              .getElapsedOfLastOnTillNow(),
-                                        ),
-                                      );
-                                    }),
-                                  ),
-                                if (!widget.job.register!.stateOn)
-                                  Flexible(
-                                    flex: 1,
-                                    child: IconButton(
-                                      onPressed: () {
-                                        widget.job.register!.stateOn =
-                                            !widget.job.register!.stateOn;
-                                        widget.job.register!.register.add(
-                                          new TimeTrackUnit(),
-                                        );
-                                        Provider.of<JobModel>(context,
-                                                listen: false)
-                                            .updateJob(widget.job);
-                                        setState(() {});
-                                      },
-                                      icon: Icon(
-                                        CupertinoIcons.timer,
-                                        size: size.shortestSide / 20,
-                                        color: widget.job.register!.stateOn
-                                            ? Colors.green
-                                            : Colors.grey,
                                       ),
                                     ),
-                                  ),
-                                if (widget.job.register!.stateOn)
-                                  Flexible(
-                                    flex: 4,
-                                    child: TextField(
-                                      minLines: 1,
-                                      maxLines: null,
-                                      decoration: InputDecoration(
-                                        hintText: 'What did you do?',
-                                        border: InputBorder.none,
-                                        focusedBorder: UnderlineInputBorder(),
+                                    if (widget.job.register!.stateOn)
+                                      Flexible(
+                                        flex: 2,
+                                        child: TimerBuilder.periodic(
+                                            Duration(
+                                                seconds:
+                                                    1), //updates every second
+                                            builder: (context) {
+                                          return Text(
+                                            durationFormatter(
+                                              widget.job.register!
+                                                  .getElapsedOfLastOnTillNow(),
+                                            ),
+                                          );
+                                        }),
                                       ),
-                                      textInputAction: TextInputAction.done,
-                                      onChanged: (value) {
-                                        if (widget.job.register!
+                                    if (!widget.job.register!.stateOn)
+                                      Flexible(
+                                        flex: 1,
+                                        child: IconButton(
+                                          onPressed: () {
+                                            widget.job.register!.stateOn =
+                                                !widget.job.register!.stateOn;
+                                            widget.job.register!.register.add(
+                                              new TimeTrackUnit(),
+                                            );
+                                            Provider.of<JobModel>(context,
+                                                    listen: false)
+                                                .updateJob(widget.job);
+                                            setState(() {});
+                                          },
+                                          icon: Icon(
+                                            CupertinoIcons.timer,
+                                            size: size.shortestSide / 20,
+                                            color: widget.job.register!.stateOn
+                                                ? Colors.green
+                                                : Colors.grey,
+                                          ),
+                                        ),
+                                      ),
+                                    if (widget.job.register!.stateOn)
+                                      Flexible(
+                                        flex: 4,
+                                        child: TextField(
+                                          minLines: 1,
+                                          maxLines: null,
+                                          decoration: InputDecoration(
+                                            hintText: 'What did you do?',
+                                            border: InputBorder.none,
+                                            focusedBorder:
+                                                UnderlineInputBorder(),
+                                          ),
+                                          textInputAction: TextInputAction.done,
+                                          onChanged: (value) {
+                                            if (widget.job.register!
+                                                    .getNotEnded()
+                                                    .note ==
+                                                null) {
+                                              widget.job.register!
+                                                  .getNotEnded()
+                                                  .note = Note();
+                                            }
+                                            widget.job.register!
                                                 .getNotEnded()
-                                                .note ==
-                                            null) {
-                                          widget.job.register!
-                                              .getNotEnded()
-                                              .note = Note();
-                                        }
-                                        widget.job.register!
-                                            .getNotEnded()
-                                            .note!
-                                            .note = value;
-                                        Provider.of<JobModel>(context,
-                                                listen: false)
-                                            .updateJob(widget.job);
-                                      },
-                                      onSubmitted: (value) {
-                                        if (widget.job.register!
+                                                .note!
+                                                .note = value;
+                                            Provider.of<JobModel>(context,
+                                                    listen: false)
+                                                .updateJob(widget.job);
+                                          },
+                                          onSubmitted: (value) {
+                                            if (widget.job.register!
+                                                    .getNotEnded()
+                                                    .note ==
+                                                null) {
+                                              widget.job.register!
+                                                  .getNotEnded()
+                                                  .note = Note();
+                                            }
+                                            widget.job.register!
                                                 .getNotEnded()
-                                                .note ==
-                                            null) {
-                                          widget.job.register!
-                                              .getNotEnded()
-                                              .note = Note();
-                                        }
-                                        widget.job.register!
-                                            .getNotEnded()
-                                            .note!
-                                            .note = value;
-                                        widget.job.register!.getNotEnded().end =
-                                            DateTime.now();
-                                        widget.job.register!.stateOn =
-                                            !widget.job.register!.stateOn;
-                                        Provider.of<JobModel>(context,
-                                                listen: false)
-                                            .updateJob(widget.job);
-                                        setState(() {});
-                                      },
-                                    ),
-                                  )
-                              ]
-                            : [],
+                                                .note!
+                                                .note = value;
+                                            widget.job.register!
+                                                .getNotEnded()
+                                                .end = DateTime.now();
+                                            widget.job.register!.stateOn =
+                                                !widget.job.register!.stateOn;
+                                            Provider.of<JobModel>(context,
+                                                    listen: false)
+                                                .updateJob(widget.job);
+                                            setState(() {});
+                                          },
+                                        ),
+                                      )
+                                  ]
+                                : [],
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              Text('Time invested :'),
+                              StatefulCounter(
+                                job: widget.job,
+                                scale: 1.0,
+                              ),
+                            ],
+                          )
+                        ],
                       ),
                     ),
-                    color: color,
                     size: size),
-              CustomCard(
-                  widget: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      Text('Time invested :'),
-                      StatefulCounter(
-                        job: widget.job,
-                        scale: 1.0,
-                      ),
-                    ],
-                  ),
-                  color: color,
-                  size: size),
+              buildDivider(color, size, indent2),
               CustomCard(
                   widget: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -391,8 +424,8 @@ class _ViewJobState extends State<ViewJob> {
                           icon: Icon(CupertinoIcons.music_albums)),
                     ],
                   ),
-                  color: color,
                   size: size),
+              buildDivider(color, size, indent2),
               CustomCard(
                   widget: Column(
                     children: [
@@ -412,6 +445,7 @@ class _ViewJobState extends State<ViewJob> {
                       ),
                       DropDownCustom(
                           widget: SizedBox(
+                            width: size.shortestSide / 4,
                             height: size.longestSide,
                             child: HomeList(
                               job: widget.job,
@@ -420,7 +454,6 @@ class _ViewJobState extends State<ViewJob> {
                           size: size * 0.6),
                     ],
                   ),
-                  color: color,
                   size: size),
             ],
           ),
@@ -429,73 +462,12 @@ class _ViewJobState extends State<ViewJob> {
     );
   }
 
-  Row buildRowCheckBox(Size size, Widget widget1) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: [
-        Row(
-          children: [
-            Text("Done : "),
-            IconButton(
-              onPressed: () {
-                if (widget.job.done) return;
-                if (widget.job.children!
-                        .where((element) => element.done == false)
-                        .toList()
-                        .length !=
-                    0) {
-                  showDialog(
-                    context: context,
-                    builder: (context) {
-                      return AlertDialog(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(15),
-                          ),
-                        ),
-                        title: Text(
-                            'Can\'t close Tollo (Sub Tollos are Not Done yet) '),
-                        actions: [
-                          ElevatedButton(
-                            onPressed: () => Navigator.pop(context, true),
-                            // passing true
-                            child: Text('Ok'),
-                          ),
-                        ],
-                      );
-                    },
-                  );
-                } else {
-                  showDialog(
-                    context: context,
-                    builder: (context) {
-                      return CustomDialog(
-                          question:
-                              'Are you sure You want to delete this Tollo');
-                    },
-                  ).then((exit) {
-                    if (exit == null) return;
-                    if (exit) {
-                      widget.job.done = true;
-
-                      Provider.of<JobModel>(context, listen: false)
-                          .updateJob(widget.job);
-                      setState(() {});
-                    }
-                  });
-                }
-              },
-              icon: Icon(
-                widget.job.done
-                    ? CupertinoIcons.checkmark_rectangle
-                    : CupertinoIcons.square,
-                size: size.shortestSide / 20,
-              ),
-            ),
-          ],
-        ),
-        widget1
-      ],
-    );
+  Divider buildDivider(Color color, Size size, double indent2) {
+    return Divider(
+              color: color,
+              thickness: size.aspectRatio * 4,
+              indent: indent2,
+              endIndent: indent2,
+            );
   }
 }
