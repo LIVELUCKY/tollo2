@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:hive/hive.dart';
 import 'package:tollo2/models/group.dart';
 import 'package:tollo2/models/job.dart';
-import 'package:tollo2/providers/job_model.dart';
 
 class GroupModel extends ChangeNotifier {
   List<Groups> categories = [];
@@ -20,7 +19,6 @@ class GroupModel extends ChangeNotifier {
   }
 
   deleteGroup(Groups groups) async {
-
     await groupsBox.delete(groups.key);
     updateGroups();
   }
@@ -39,9 +37,9 @@ class GroupModel extends ChangeNotifier {
   }
 
   deleteJobFromGroup(Job job) {
-    if(containedInAGroup(job)) {
-      Groups group = categories.firstWhere((group) =>
-          group.jobs!.contains(job));
+    if (containedInAGroup(job)) {
+      Groups group =
+          categories.firstWhere((group) => group.jobs!.contains(job));
       group.jobs!.remove(job);
       group.save();
       notifyListeners();
@@ -52,9 +50,7 @@ class GroupModel extends ChangeNotifier {
     return categories.firstWhere((group) => group.jobs!.contains(job));
   }
 
-  containedInAGroup(Job job){
+  containedInAGroup(Job job) {
     return categories.expand((element) => element.jobs!).contains(job);
   }
-
-
 }

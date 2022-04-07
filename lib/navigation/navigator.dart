@@ -2,10 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:tollo2/widgets/components/custom_floating_circular_btn.dart';
-import 'package:tollo2/widgets/forms/newGroup.dart';
-import 'package:tollo2/widgets/forms/newJob.dart';
-import 'package:tollo2/widgets/forms/newNote.dart';
+
 import 'bottom_routes.dart';
+import 'navigation.dart';
 
 class BottomMainNavigator extends StatefulWidget {
   const BottomMainNavigator({Key? key}) : super(key: key);
@@ -34,31 +33,18 @@ class _BottomMainNavigatorState extends State<BottomMainNavigator> {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: new Visibility(
-        visible: selectedPage > 3 ? false : true,
+        visible: selectedPage > 2 ? false : true,
         child: CustomFloatingCircularButton(
           widthAndHeight: 60,
           onPressed: () {
             if (selectedPage == 0) {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => NewJob(
-                    edit: false,
-                  ),
-                ),
-              );
+              goToNewJob(context);
             } else if (selectedPage == 1) {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => NewGroup()),
-              );
+              goToNewNote(context);
             } else if (selectedPage == 2) {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => NewNote()),
-              );
+              goToNewGroup(context);
             } else {
-              print(selectedPage.toString());
+              print("not an option"+selectedPage.toString());
             }
           },
           iconData: CupertinoIcons.add,
@@ -66,23 +52,19 @@ class _BottomMainNavigatorState extends State<BottomMainNavigator> {
       ),
       bottomNavigationBar: BottomAppBar(
         shape: CircularNotchedRectangle(),
-        notchMargin: 5.0,
+        notchMargin: 16.0,
         child: Row(
           mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: <Widget>[
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                for (int i = 0; i < 2; i++) buildIBottomBarButton(i),
-              ],
+            for (int i = 0; i < 2; i++) buildIBottomBarButton(i),
+            IconButton(
+              icon: Icon(null),
+              onPressed: () {
+                //do nothing
+              },
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                for (int i = 2; i < 4; i++) buildIBottomBarButton(i),
-              ],
-            ),
+            for (int i = 2; i < 4; i++) buildIBottomBarButton(i),
           ],
         ),
       ),
