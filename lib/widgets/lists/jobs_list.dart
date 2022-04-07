@@ -5,6 +5,7 @@ import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:tollo2/models/group.dart';
 import 'package:tollo2/models/job.dart';
+import 'package:tollo2/providers/groups_model.dart';
 import 'package:tollo2/providers/job_model.dart';
 import 'package:tollo2/services/sort_by_searched.dart';
 import 'package:tollo2/widgets/lists/job_list_tile.dart';
@@ -34,7 +35,8 @@ class _HomeListState extends State<HomeList> {
       if (children) {
         jobs = Provider.of<JobModel>(context)
             .jobs
-            .where((element) => element.father == null)
+            .where((element) => element.father == null && !Provider.of<GroupModel>(context)
+            .containedInAGroup(element))
             .toList();
       } else {
         jobs = Provider.of<JobModel>(context).jobs;
