@@ -24,74 +24,76 @@ class _ViewNoteState extends State<ViewNote> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(0, 8.0, 0, 12.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  IconButton(
-                    onPressed: () => Navigator.pop(context),
-                    icon: Icon(CupertinoIcons.back),
-                  ),
-                  IconButton(
-                    onPressed: () async {
-                      bool edited = await Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => NewNote(
-                            note: widget.note,
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.fromLTRB(0, 8.0, 0, 12.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    IconButton(
+                      onPressed: () => Navigator.pop(context),
+                      icon: Icon(CupertinoIcons.back),
+                    ),
+                    IconButton(
+                      onPressed: () async {
+                        bool edited = await Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => NewNote(
+                              note: widget.note,
+                            ),
                           ),
-                        ),
-                      );
-                      if (edited) {
-                        setState(() {});
-                      }
-                    },
-                    icon: Icon(Icons.edit),
-                  ),
-                  IconButton(
-                    onPressed: () async {
-                      Provider.of<NoteModel>(context, listen: false)
-                          .deleteNote(widget.note);
-                      Navigator.pop(context);
-                    },
-                    icon: Icon(
-                      CupertinoIcons.trash_fill,
-                      color: Colors.red.shade400,
+                        );
+                        if (edited) {
+                          setState(() {});
+                        }
+                      },
+                      icon: Icon(Icons.edit),
+                    ),
+                    IconButton(
+                      onPressed: () async {
+                        Provider.of<NoteModel>(context, listen: false)
+                            .deleteNote(widget.note);
+                        Navigator.pop(context);
+                      },
+                      icon: Icon(
+                        CupertinoIcons.trash_fill,
+                        color: Colors.red.shade400,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              CustomCard(
+                  widget: Center(
+                    child: Text(
+                      formatFull(widget.note.createdAt),
                     ),
                   ),
-                ],
-              ),
-            ),
-            CustomCard(
-                widget: Center(
-                  child: Text(
-                    formatFull(widget.note.createdAt),
-                  ),
-                ),
-                size: size),
-            CustomCard(
-                widget: DropDownCustom(widget: new Text(
-                  widget.note.note,
+                  size: size),
+              CustomCard(
+                  widget: DropDownCustom(widget: new Text(
+                    widget.note.note,
 
-                  style: TextStyle(
-                      decoration: TextDecoration.underline,
-                      decorationColor: Theme.of(context).primaryColor,
-                      decorationStyle: TextDecorationStyle.solid,
-                      backgroundColor:
-                      Theme.of(context).backgroundColor.withAlpha(10),
-                      height: size.aspectRatio * 2.8,
-                      decorationThickness: size.aspectRatio * 2),
-                  textAlign: isRTL(widget.note.note)
-                    ? TextAlign.right
-                    : TextAlign.left,
+                    style: TextStyle(
+                        decoration: TextDecoration.underline,
+                        decorationColor: Theme.of(context).primaryColor,
+                        decorationStyle: TextDecorationStyle.solid,
+                        backgroundColor:
+                        Theme.of(context).backgroundColor.withAlpha(10),
+                        height: size.aspectRatio * 2.8,
+                        decorationThickness: size.aspectRatio * 2),
+                    textAlign: isRTL(widget.note.note)
+                      ? TextAlign.right
+                      : TextAlign.left,
 
-                ), size: size),
-                size: size)
-          ],
+                  ), size: size),
+                  size: size)
+            ],
+          ),
         ),
       ),
     );
