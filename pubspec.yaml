@@ -44,6 +44,9 @@ dependencies:
   substring_highlight: ^1.0.33
   easy_dynamic_theme: ^2.2.0
   flutter_local_notifications: ^8.1.1+1
+  audio_visualizer: ^0.1.1
+  audio_wave: ^0.1.2
+  circular_buffer: ^0.10.0
 
 
 

@@ -50,6 +50,20 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.7.0"
+  audio_visualizer:
+    dependency: "direct main"
+    description:
+      name: audio_visualizer
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.1.1"
+  audio_wave:
+    dependency: "direct main"
+    description:
+      name: audio_wave
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.1.2"
   boolean_selector:
     dependency: transitive
     description:
@@ -134,6 +148,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.1"
+  circular_buffer:
+    dependency: "direct main"
+    description:
+      name: circular_buffer
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.10.0"
   clock:
     dependency: transitive
     description:
@@ -155,6 +176,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.15.0"
+  complex:
+    dependency: transitive
+    description:
+      name: complex
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.6.1"
   convert:
     dependency: transitive
     description:

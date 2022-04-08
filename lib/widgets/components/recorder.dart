@@ -1,7 +1,7 @@
 import 'dart:async';
-
+import 'package:audio_wave/audio_wave.dart';
+import 'package:circular_buffer/circular_buffer.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:record/record.dart';
 import 'package:tollo2/models/job.dart';
@@ -9,9 +9,11 @@ import 'package:tollo2/providers/job_model.dart';
 import 'package:tollo2/services/files_handling/audio_save.dart';
 
 class Recorder extends StatefulWidget {
-  const Recorder({Key? key, required this.job, required this.update}) : super(key: key);
+  const Recorder({Key? key, required this.job, required this.update})
+      : super(key: key);
   final Job job;
   final Function() update;
+
   @override
   _RecorderState createState() => _RecorderState();
 }
@@ -24,9 +26,18 @@ class _RecorderState extends State<Recorder> {
   Timer? _ampTimer;
   final _audioRecorder = Record();
   Amplitude? _amplitude;
+  final buffer = CircularBuffer<double>(40);
+
 
   @override
   Widget build(BuildContext context) {
+    while(buffer.isUnfilled){
+      buffer.add(1.0);
+    }
+
+    var size2 = MediaQuery.of(context).size;
+    buffer.add(_amplitude?.current ?? 0);
+
     return Column(
       children: [
         Row(
@@ -37,14 +48,19 @@ class _RecorderState extends State<Recorder> {
             _buildText(),
           ],
         ),
-        if (_amplitude != null) ...[
-          const SizedBox(height: 40),
-          Text('Current: ${_amplitude?.current ?? 0.0}'),
-          Text('Max: ${_amplitude?.max ?? 0.0}'),
-        ],
+        if (_isRecording)
+          FittedBox(fit: BoxFit.contain,
+            child: AudioWave(
+                width: size2.shortestSide*0.9,
+                height: size2.shortestSide*0.25,
+                beatRate: Duration(milliseconds: 60),
+                alignment: 'top',
+                bars: getAudioWaveBars(buffer)),
+          ),
       ],
     );
   }
+
   Widget _buildRecordStopControl() {
     late Icon icon;
     late Color color;
@@ -87,7 +103,7 @@ class _RecorderState extends State<Recorder> {
         await _audioRecorder.start(path: path, encoder: AudioEncoder.AAC);
 
         bool isRecording = await _audioRecorder.isRecording();
-        widget.job.pathsAudios.insert(0,path);
+        widget.job.pathsAudios.insert(0, path);
         Provider.of<JobModel>(context, listen: false).updateJob(widget.job);
         setState(() {
           _isRecording = isRecording;
@@ -120,10 +136,11 @@ class _RecorderState extends State<Recorder> {
 
     _ampTimer =
         Timer.periodic(const Duration(milliseconds: 200), (Timer t) async {
-          _amplitude = await _audioRecorder.getAmplitude();
-          setState(() {});
-        });
+      _amplitude = await _audioRecorder.getAmplitude();
+      setState(() {});
+    });
   }
+
   Widget _buildTimer() {
     final String minutes = _formatNumber(_recordDuration ~/ 60);
     final String seconds = _formatNumber(_recordDuration % 60);
@@ -133,6 +150,7 @@ class _RecorderState extends State<Recorder> {
       style: TextStyle(color: Colors.red),
     );
   }
+
   String _formatNumber(int number) {
     String numberStr = number.toString();
     if (number < 10) {
@@ -140,5 +158,15 @@ class _RecorderState extends State<Recorder> {
     }
 
     return numberStr;
+  }
+
+  List<AudioWaveBar> getAudioWaveBars(CircularBuffer<double> buffer) {
+    List<AudioWaveBar> aux = [];
+    buffer.forEach((element) {
+      var height2 = (_amplitude!.max - element).abs();
+      aux.add(AudioWaveBar(
+          height: height2 > 150 ? 150 : height2, color: Colors.blue));
+    });
+    return aux;
   }
 }

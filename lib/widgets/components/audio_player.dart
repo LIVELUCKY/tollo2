@@ -7,12 +7,12 @@ import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:record/record.dart';
 import 'package:tollo2/models/job.dart';
-import 'package:tollo2/widgets/components/CustomCard.dart';
 import 'package:tollo2/widgets/components/player.dart';
 import 'package:tollo2/widgets/components/recorder.dart';
 
 class AudioPlayerWidget extends StatefulWidget {
   const AudioPlayerWidget({required this.job});
+
   final Job job;
 
   @override
@@ -52,8 +52,8 @@ class _AudioPlayerWidgetState extends State<AudioPlayerWidget> {
 
   @override
   Widget build(BuildContext context) {
-    Size size=MediaQuery.of(context).size;
-    Color colorOfCard=Theme.of(context).cardColor;
+    Size size = MediaQuery.of(context).size;
+    Color colorOfCard = Theme.of(context).cardColor;
     return Scaffold(
       body: ListView.builder(
         itemCount: audios.length + 1,
@@ -65,16 +65,16 @@ class _AudioPlayerWidgetState extends State<AudioPlayerWidget> {
                 setState(() {});
               },
             );
-          return CustomCard(
-              widget: Player(
-                pathToAudioFile: audios[index - 1],
-                job: widget.job,
-                callback: () {
-                  setState(() {});
-                },
-              ),
-              size: size,
-            );
+          return Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Player(
+              pathToAudioFile: audios[index - 1],
+              job: widget.job,
+              callback: () {
+                setState(() {});
+              },
+            ),
+          );
         },
       ),
     );
