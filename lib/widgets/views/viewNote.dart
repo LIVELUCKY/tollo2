@@ -23,6 +23,7 @@ class _ViewNoteState extends State<ViewNote> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+    var note2 = widget.note.note;
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
@@ -76,7 +77,7 @@ class _ViewNoteState extends State<ViewNote> {
                   size: size),
               CustomCard(
                   widget: DropDownCustom(widget: new Text(
-                    widget.note.note,
+                    note2,
 
                     style: TextStyle(
                         decoration: TextDecoration.underline,
@@ -86,7 +87,7 @@ class _ViewNoteState extends State<ViewNote> {
                         Theme.of(context).backgroundColor.withAlpha(10),
                         height: size.aspectRatio * 2.8,
                         decorationThickness: size.aspectRatio * 2),
-                    textAlign: isRTL(widget.note.note)
+                    textAlign: isRTL(note2)
                       ? TextAlign.right
                       : TextAlign.left,
 
