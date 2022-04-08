@@ -10,6 +10,8 @@ import 'package:tollo2/providers/job_model.dart';
 import 'package:tollo2/services/sort_by_searched.dart';
 import 'package:tollo2/widgets/lists/job_list_tile.dart';
 
+import '../../services/textDirection.dart';
+
 class HomeList extends StatefulWidget {
   const HomeList({Key? key, this.job, this.size, this.category, this.widget})
       : super(key: key);
@@ -26,7 +28,7 @@ class _HomeListState extends State<HomeList> {
   String searched = '';
   bool children = true;
   late List<Job> jobs;
-
+bool r=false;
   @override
   Widget build(BuildContext context) {
     Size size =
@@ -74,11 +76,14 @@ class _HomeListState extends State<HomeList> {
                 child: TextField(
                   onChanged: (value) {
                     searched = value;
+                    setState(() {
+                      r=isRTL(value);
+                    });
                   },
                   textInputAction: TextInputAction.search,
                   onSubmitted: (value) {
                     setState(() {});
-                  },
+                  },              textAlign:   r?TextAlign.right:TextAlign.left,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(2.0),

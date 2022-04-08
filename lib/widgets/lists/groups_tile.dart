@@ -1,8 +1,11 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:tollo2/models/group.dart';
 import 'package:tollo2/services/formatters/date_full.dart';
 import 'package:tollo2/widgets/views/viewGroup.dart';
+
+import '../../services/textDirection.dart';
 
 class GroupsTile extends StatelessWidget {
   const GroupsTile({Key? key, required this.group, required this.size})
@@ -31,7 +34,7 @@ class GroupsTile extends StatelessWidget {
           ),
         ),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
+
           children: [
             Padding(
               padding: const EdgeInsets.all(8.0),
@@ -74,6 +77,7 @@ class GroupsTile extends StatelessWidget {
               softWrap: true,
               overflow: TextOverflow.fade,
               textScaleFactor: size.aspectRatio * 1.6,
+              textAlign:   isRTL(group.note!.note)?TextAlign.right:TextAlign.left
             ),
           ],
         ),

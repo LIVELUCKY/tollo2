@@ -11,6 +11,7 @@ import 'package:tollo2/widgets/components/drop_down.dart';
 import 'package:tollo2/widgets/views/viewNote.dart';
 
 import '../../services/formatters/date_full.dart';
+import '../../services/textDirection.dart';
 
 class NotesList extends StatefulWidget {
   const NotesList({Key? key}) : super(key: key);
@@ -22,6 +23,7 @@ class NotesList extends StatefulWidget {
 class _NotesListState extends State<NotesList> {
   String searched = '';
   late List<Note> notes;
+  bool r = false;
 
   @override
   Widget build(BuildContext context) {
@@ -41,6 +43,9 @@ class _NotesListState extends State<NotesList> {
                       child: TextField(
                         onChanged: (value) {
                           searched = value;
+                          setState(() {
+                            r = isRTL(value);
+                          });
                         },
                         textInputAction: TextInputAction.search,
                         onSubmitted: (value) {
@@ -51,6 +56,7 @@ class _NotesListState extends State<NotesList> {
                           // border: InputBorder.none,
                           // focusedBorder: UnderlineInputBorder(),
                         ),
+                        textAlign: r ? TextAlign.right : TextAlign.left,
                       ),
                     ),
                   ],
@@ -59,6 +65,7 @@ class _NotesListState extends State<NotesList> {
             ),
           );
         Note note = notes[index - 1];
+        var text2 = trimTill(note.note, searched);
         return GestureDetector(
           onTap: () {
             Navigator.push(
@@ -89,13 +96,15 @@ class _NotesListState extends State<NotesList> {
               CustomCard(
                   widget: DropDownCustom(
                       widget: new SubstringHighlight(
-                        text: trimTill(note.note, searched),
-                        term: searched,
-                        textStyle: Theme.of(context).textTheme.bodyText1!,
-                        textStyleHighlight: TextStyle(
-                          backgroundColor: Theme.of(context).primaryColorLight,
-                        ),
-                      ),
+                          text: text2,
+                          term: searched,
+                          textStyle: Theme.of(context).textTheme.bodyText1!,
+                          textStyleHighlight: TextStyle(
+                            backgroundColor:
+                                Theme.of(context).primaryColorLight,
+                          ),
+                          textAlign:
+                              isRTL(text2) ? TextAlign.right : TextAlign.left),
                       size: size / 4),
                   size: size),
             ],

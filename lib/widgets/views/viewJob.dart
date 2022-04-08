@@ -25,6 +25,8 @@ import 'package:tollo2/widgets/lists/register_list.dart';
 import 'package:tollo2/widgets/lists/reminders_list.dart';
 import 'package:tollo2/widgets/views/gallery.dart';
 
+import '../../services/textDirection.dart';
+
 class ViewJob extends StatefulWidget {
   const ViewJob({Key? key, required this.job}) : super(key: key);
   final Job job;
@@ -37,6 +39,7 @@ class _ViewJobState extends State<ViewJob> {
   bool isExpanded = false;
   List<Job> fathers = [];
   final picker = ImagePicker();
+  bool r=false;
 
   @override
   void initState() {
@@ -56,6 +59,7 @@ class _ViewJobState extends State<ViewJob> {
     List<Job> jobs = [];
     if (widget.job.children != null) jobs = widget.job.children!.toList();
     var indent2 = size.shortestSide / 8;
+    var note2 = widget.job.note!.note;
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
@@ -246,9 +250,9 @@ class _ViewJobState extends State<ViewJob> {
                   widget: DropDownCustom(
                     size: size,
                     widget: new Text(
-                      widget.job.note!.note,
+                      note2,
                       softWrap: true,
-                      overflow: TextOverflow.fade,
+                      overflow: TextOverflow.fade,              textAlign:   isRTL(note2)?TextAlign.right:TextAlign.left
                     ),
                   ),
                   size: size),
@@ -325,7 +329,7 @@ class _ViewJobState extends State<ViewJob> {
                                     if (widget.job.register!.stateOn)
                                       Flexible(
                                         flex: 4,
-                                        child: TextField(
+                                        child: TextField(              textAlign:   r?TextAlign.right:TextAlign.left,
                                           minLines: 1,
                                           maxLines: null,
                                           decoration: InputDecoration(
@@ -348,9 +352,13 @@ class _ViewJobState extends State<ViewJob> {
                                                 .getNotEnded()
                                                 .note!
                                                 .note = value;
+
                                             Provider.of<JobModel>(context,
                                                     listen: false)
                                                 .updateJob(widget.job);
+
+                                            setState(() {r=isRTL(value);});
+
                                           },
                                           onSubmitted: (value) {
                                             if (widget.job.register!

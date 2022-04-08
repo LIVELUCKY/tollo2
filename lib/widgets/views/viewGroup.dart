@@ -9,9 +9,10 @@ import 'package:tollo2/providers/job_model.dart';
 import 'package:tollo2/services/formatters/date_full.dart';
 import 'package:tollo2/services/permissions/storage_perm.dart';
 import 'package:tollo2/widgets/components/dialog.dart';
-import 'package:tollo2/widgets/forms/newGroup.dart';
 import 'package:tollo2/widgets/forms/newJob.dart';
 import 'package:tollo2/widgets/lists/jobs_list.dart';
+
+import '../../services/textDirection.dart';
 
 class ViewGroup extends StatefulWidget {
   const ViewGroup({Key? key, required this.group}) : super(key: key);
@@ -25,85 +26,78 @@ class _ViewGroupState extends State<ViewGroup> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+    var note2 = widget.group.note!.note;
     return SafeArea(
       child: Scaffold(
         body: HomeList(
           category: widget.group,
-          widget: Row(
+          widget: Column(
+            crossAxisAlignment: isRTL(note2)
+                ? CrossAxisAlignment.end
+                : CrossAxisAlignment.start,
             children: [
-              Flexible(
-                flex: 2,
-                child: Column(
-                  children: [
-                    IconButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => NewJob(
-                                edit: false,
-                                groups: widget.group,
-                              ),
+              Center(
+                child: Text(
+                  formatFull(widget.group.note!.createdAt),
+                  softWrap: true,
+                  overflow: TextOverflow.fade,
+                ),
+              ),
+              Row(
+                children: [
+                  IconButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => NewJob(
+                              edit: false,
+                              groups: widget.group,
                             ),
-                          );
-                        },
-                        icon: Icon(CupertinoIcons.add)),
-                    IconButton(
-                        onPressed: () async {
-                          bool canDeleteFiles = await checkPermissionsStorage();
-                          if (canDeleteFiles) {
-                            showDialog(
-                              context: context,
-                              builder: (context) {
-                                return CustomDialog(
-                                    question:
-                                        'Are you sure You want to delete this Group and All Jobs In it??');
-                              },
-                            ).then((exit) async {
-                              if (exit == null) return;
+                          ),
+                        );
+                      },
+                      icon: Icon(CupertinoIcons.add)),
+                  IconButton(
+                      onPressed: () async {
+                        bool canDeleteFiles = await checkPermissionsStorage();
+                        if (canDeleteFiles) {
+                          showDialog(
+                            context: context,
+                            builder: (context) {
+                              return CustomDialog(
+                                  question:
+                                      'Are you sure You want to delete this Group and All Jobs In it??');
+                            },
+                          ).then((exit) async {
+                            if (exit == null) return;
 
-                              if (exit) {
-                                // user pressed Yes button
-                                Provider.of<GroupModel>(context, listen: false)
-                                    .deleteGroup(widget.group);
-                                for(Job j in widget.group.jobs!){
-                                  Provider.of<JobModel>(context, listen: false)
-                                      .deleteJob(j);
-                                }
-                                Navigator.pop(context);
-                              } else {
-                                // user pressed No button
+                            if (exit) {
+                              // user pressed Yes button
+                              Provider.of<GroupModel>(context, listen: false)
+                                  .deleteGroup(widget.group);
+                              for (Job j in widget.group.jobs!) {
+                                Provider.of<JobModel>(context, listen: false)
+                                    .deleteJob(j);
                               }
-                            });
-                          }
-                        },
-                        icon: Icon(
-                          CupertinoIcons.trash_fill,
-                          color: Colors.red.shade400,
-                        ))
-                  ],
-                ),
+                              Navigator.pop(context);
+                            } else {
+                              // user pressed No button
+                            }
+                          });
+                        }
+                      },
+                      icon: Icon(
+                        CupertinoIcons.trash_fill,
+                        color: Colors.red.shade400,
+                      ))
+                ],
               ),
-              Flexible(
-                flex: 2,
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    formatFull(widget.group.note!.createdAt),
-                    softWrap: true,
-                    overflow: TextOverflow.fade,
-                  ),
-                ),
-              ),
-              Flexible(
-                flex: 6,
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    widget.group.note!.note,
-                    softWrap: true,
-                    overflow: TextOverflow.fade,
-                  ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  note2,
+                  softWrap: true,
                 ),
               ),
             ],

@@ -8,6 +8,7 @@ import 'package:tollo2/widgets/components/stateful_counter.dart';
 
 import '../../services/formatters/date_full.dart';
 import '../../services/formatters/duration_formatter_in_days.dart';
+import '../../services/textDirection.dart';
 
 class RegisterNotesList extends StatefulWidget {
   const RegisterNotesList({Key? key, required this.job}) : super(key: key);
@@ -44,30 +45,24 @@ class _RegisterNotesListState extends State<RegisterNotesList> {
                     padding: const EdgeInsets.all(8.0),
                     child: Column(
                       children: [
-                        Padding(
-                          padding:
-                              const EdgeInsets.fromLTRB(4.0, 16.0, 8.0, 1.0),
-                          child: Row(
-                            children: [
-                              (ttu.note != null)
-                                  ? Text(
-                                      ttu.note!.note,
-                                      textAlign: TextAlign.left,
-                                      style: TextStyle(
-                                          decoration: TextDecoration.underline,
-                                          fontWeight: FontWeight.bold),
-                                    )
-                                  : Text('Not Closed yet',
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: (Theme.of(context)
-                                                  .textTheme
-                                                  .bodyText1!
-                                                  .fontSize)! *
-                                              1.2))
-                            ],
-                          ),
-                        ),
+                        (ttu.note != null)
+                            ? Text(
+                                ttu.note!.note,
+                          textAlign: isRTL(ttu.note!.note)
+                              ? TextAlign.right
+                              : TextAlign.left,
+                                style: TextStyle(
+                                    decoration: TextDecoration.underline,
+                                    fontWeight: FontWeight.bold),
+                              )
+                            : Text('Not Closed yet',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: (Theme.of(context)
+                                            .textTheme
+                                            .bodyText1!
+                                            .fontSize)! *
+                                        1.2)),
                         Card(
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,

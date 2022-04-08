@@ -7,6 +7,7 @@ import 'package:tollo2/models/job.dart';
 import 'package:tollo2/providers/job_model.dart';
 import 'package:tollo2/services/formatters/date_full.dart';
 import 'package:tollo2/services/formatters/trimmer.dart';
+import 'package:tollo2/services/textDirection.dart';
 import 'package:tollo2/widgets/components/dialog.dart';
 import 'package:tollo2/widgets/components/drop_down.dart';
 import 'package:tollo2/widgets/views/viewJob.dart';
@@ -22,6 +23,7 @@ class HomeJobListTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Color jobColor = Color(job.categoryColor);
+    var text2 = trimTill(job.note!.note, searched);
     return GestureDetector(
       onTap: () {
         Navigator.push(
@@ -70,7 +72,7 @@ class HomeJobListTile extends StatelessWidget {
               padding: const EdgeInsets.all(8.0),
               child: DropDownCustom(
                 widget: SubstringHighlight(
-                  text: trimTill(job.note!.note, searched),
+                  text: text2,textAlign:isRTL(text2)?TextAlign.right:TextAlign.left ,
                   term: searched,
                   overflow: TextOverflow.fade,
                   textStyle: Theme.of(context).textTheme.bodyText1!,

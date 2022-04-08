@@ -10,6 +10,8 @@ import 'package:tollo2/widgets/components/CustomCard.dart';
 import 'package:tollo2/widgets/components/drop_down.dart';
 import 'package:tollo2/widgets/views/viewJob.dart';
 
+import '../../services/textDirection.dart';
+
 class JobsAlarmsList extends StatefulWidget {
   const JobsAlarmsList({Key? key}) : super(key: key);
 
@@ -20,6 +22,7 @@ class JobsAlarmsList extends StatefulWidget {
 class _JobsAlarmsListState extends State<JobsAlarmsList> {
   String searched = '';
   late List<Job> jobs;
+  bool r = false;
 
   @override
   Widget build(BuildContext context) {
@@ -46,8 +49,12 @@ class _JobsAlarmsListState extends State<JobsAlarmsList> {
                         child: TextField(
                           onChanged: (value) {
                             searched = value;
+                            setState(() {
+                              r = isRTL(value);
+                            });
                           },
                           textInputAction: TextInputAction.search,
+                          textAlign: r ? TextAlign.right : TextAlign.left,
                           onSubmitted: (value) {
                             setState(() {});
                           },
@@ -91,10 +98,9 @@ class _JobsAlarmsListState extends State<JobsAlarmsList> {
                                       getNearstReminder(job, DateTime.now())
                                           .clockBegin!
                                           .difference(DateTime.now());
-                                  return Text(durationFormatter(
-                                      count.isNegative
-                                          ? Duration.zero
-                                          : count));
+                                  return Text(durationFormatter(count.isNegative
+                                      ? Duration.zero
+                                      : count));
                                 },
                               ),
                             ),
