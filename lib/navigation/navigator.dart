@@ -44,30 +44,34 @@ class _BottomMainNavigatorState extends State<BottomMainNavigator> {
             } else if (selectedPage == 2) {
               goToNewGroup(context);
             } else {
-              print("not an option"+selectedPage.toString());
+              print("not an option" + selectedPage.toString());
             }
           },
           iconData: CupertinoIcons.add,
         ),
       ),
       bottomNavigationBar: BottomAppBar(
-        shape: CircularNotchedRectangle(),
+        shape: selectedPage == 3 ? null : CircularNotchedRectangle(),
         notchMargin: 16.0,
-        child: Row(
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: <Widget>[
-            for (int i = 0; i < 2; i++) buildIBottomBarButton(i),
-            IconButton(
-              icon: Icon(null),
-              onPressed: () {
-                //do nothing
-              },
-            ),
-            for (int i = 2; i < 4; i++) buildIBottomBarButton(i),
-          ],
-        ),
+        child: buildRowOfNavBar(),
       ),
+    );
+  }
+
+  Row buildRowOfNavBar() {
+    return Row(
+      mainAxisSize: MainAxisSize.max,
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: <Widget>[
+        for (int i = 0; i < 2; i++) buildIBottomBarButton(i),
+        IconButton(
+          icon: Icon(null),
+          onPressed: () {
+            //do nothing
+          },
+        ),
+        for (int i = 2; i < 4; i++) buildIBottomBarButton(i),
+      ],
     );
   }
 
