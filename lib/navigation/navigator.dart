@@ -64,12 +64,7 @@ class _BottomMainNavigatorState extends State<BottomMainNavigator> {
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: <Widget>[
         for (int i = 0; i < 2; i++) buildIBottomBarButton(i),
-        IconButton(
-          icon: Icon(null),
-          onPressed: () {
-            //do nothing
-          },
-        ),
+        Icon(null),
         for (int i = 2; i < 4; i++) buildIBottomBarButton(i),
       ],
     );
