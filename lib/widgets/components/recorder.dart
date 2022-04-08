@@ -1,6 +1,6 @@
 import 'dart:async';
+
 import 'package:audio_wave/audio_wave.dart';
-import 'package:circular_buffer/circular_buffer.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:record/record.dart';
@@ -26,17 +26,57 @@ class _RecorderState extends State<Recorder> {
   Timer? _ampTimer;
   final _audioRecorder = Record();
   Amplitude? _amplitude;
-  final buffer = CircularBuffer<double>(40);
+  List<Color> rainbow = [
+    Colors.purple,
+    Colors.indigo,
+    Colors.cyan,
+    Colors.green,
+    Colors.yellow,
+    Colors.deepOrange,
+    Colors.red
+  ];
 
+  Color getColor(double height2, double max) {
+    if (height2 > max * 0.9) {
+      return Colors.purple;
+    } else if (height2 > max * 0.8) {
+      return Colors.indigo;
+    } else if (height2 > max * 0.7) {
+      return Colors.cyan;
+    } else if (height2 > max * 0.6) {
+      return Colors.green;
+    } else if (height2 > max * 0.5) {
+      return Colors.yellow;
+    } else if (height2 > max * 0.4) {
+      return Colors.deepOrange;
+    } else if (height2 > max * 0.3) {
+      return Colors.cyan;
+    } else {
+      return Colors.pink;
+    }
+  }
+
+  // final buffer = CircularBuffer<AudioWaveBar>(40);
+  List<AudioWaveBar> fixedLengthList = List<AudioWaveBar>.filled(
+      40, AudioWaveBar(height: 1.0, color: Colors.blue),
+      growable: true);
 
   @override
   Widget build(BuildContext context) {
-    while(buffer.isUnfilled){
-      buffer.add(1.0);
+    var size2 = MediaQuery.of(context).size;
+    var height3 = size2.shortestSide * 0.25;
+    var d = height3 * 0.95;
+    if (_isRecording) {
+      fixedLengthList.removeAt(0);
+      var height2 = (_amplitude!.max - _amplitude!.current).abs();
+
+      fixedLengthList.add(AudioWaveBar(
+          height: height2 > d ? d : height2, color: getColor(height2, d)));
     }
 
-    var size2 = MediaQuery.of(context).size;
-    buffer.add(_amplitude?.current ?? 0);
+    //
+    // var height2 = (_amplitude!.max -_amplitude!.current).abs();
+    // buffer.add(AudioWaveBar( height: height2 > 150 ? 150 : height2, color: Colors.blue));
 
     return Column(
       children: [
@@ -49,13 +89,14 @@ class _RecorderState extends State<Recorder> {
           ],
         ),
         if (_isRecording)
-          FittedBox(fit: BoxFit.contain,
+          FittedBox(
+            fit: BoxFit.contain,
             child: AudioWave(
-                width: size2.shortestSide*0.9,
-                height: size2.shortestSide*0.25,
-                beatRate: Duration(milliseconds: 60),
+                width: size2.shortestSide * 0.9,
+                height: height3,
+                beatRate: Duration(seconds: 1),
                 alignment: 'top',
-                bars: getAudioWaveBars(buffer)),
+                bars: fixedLengthList),
           ),
       ],
     );
@@ -160,13 +201,12 @@ class _RecorderState extends State<Recorder> {
     return numberStr;
   }
 
-  List<AudioWaveBar> getAudioWaveBars(CircularBuffer<double> buffer) {
-    List<AudioWaveBar> aux = [];
-    buffer.forEach((element) {
-      var height2 = (_amplitude!.max - element).abs();
-      aux.add(AudioWaveBar(
-          height: height2 > 150 ? 150 : height2, color: Colors.blue));
-    });
-    return aux;
-  }
+// List<AudioWaveBar> getAudioWaveBars(CircularBuffer<double> buffer) {
+//   List<AudioWaveBar> aux = [];
+//   buffer.forEach((element) {
+//     var height2 = (_amplitude!.max - element).abs();
+//     aux.add(AudioWaveBar( height: height2 > 150 ? 150 : height2, color: Colors.blue));
+//   });
+//   return aux;
+// }
 }

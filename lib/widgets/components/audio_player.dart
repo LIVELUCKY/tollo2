@@ -1,10 +1,8 @@
 import 'dart:async';
 
 import 'package:audio_session/audio_session.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
 import 'package:record/record.dart';
 import 'package:tollo2/models/job.dart';
 import 'package:tollo2/widgets/components/player.dart';
