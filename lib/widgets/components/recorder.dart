@@ -26,15 +26,6 @@ class _RecorderState extends State<Recorder> {
   Timer? _ampTimer;
   final _audioRecorder = Record();
   Amplitude? _amplitude;
-  List<Color> rainbow = [
-    Colors.purple,
-    Colors.indigo,
-    Colors.cyan,
-    Colors.green,
-    Colors.yellow,
-    Colors.deepOrange,
-    Colors.red
-  ];
 
   Color getColor(double height2, double max) {
     if (height2 > max * 0.9) {
@@ -58,7 +49,7 @@ class _RecorderState extends State<Recorder> {
 
   // final buffer = CircularBuffer<AudioWaveBar>(40);
   List<AudioWaveBar> fixedLengthList = List<AudioWaveBar>.filled(
-      40, AudioWaveBar(height: 1.0, color: Colors.blue),
+      60, AudioWaveBar(height: 1.0, color: Colors.blue),
       growable: true);
 
   @override
@@ -89,14 +80,20 @@ class _RecorderState extends State<Recorder> {
           ],
         ),
         if (_isRecording)
-          FittedBox(
-            fit: BoxFit.contain,
-            child: AudioWave(
-                width: size2.shortestSide * 0.9,
-                height: height3,
-                beatRate: Duration(seconds: 1),
-                alignment: 'top',
-                bars: fixedLengthList),
+          Container(
+            color: Theme.of(context).cardColor,
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: FittedBox(
+                fit: BoxFit.contain,
+                child: AudioWave(
+                    width: size2.shortestSide * 0.9,
+                    height: height3,
+                    beatRate: Duration(seconds: 5),
+                    alignment: 'bottom',
+                    bars: fixedLengthList),
+              ),
+            ),
           ),
       ],
     );
@@ -201,6 +198,11 @@ class _RecorderState extends State<Recorder> {
     return numberStr;
   }
 
+  @override
+  void dispose() {
+    _stop();
+    super.dispose();
+  }
 // List<AudioWaveBar> getAudioWaveBars(CircularBuffer<double> buffer) {
 //   List<AudioWaveBar> aux = [];
 //   buffer.forEach((element) {

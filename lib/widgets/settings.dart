@@ -28,7 +28,6 @@ class _SettingsWidgetState extends State<SettingsWidget> {
               Icon(
                 CupertinoIcons.settings_solid,
                 size: size.width / 4,
-                color: Theme.of(context).buttonColor,
               ),
               createLine([
                 Text('Dark Theme:'),
