@@ -9,10 +9,9 @@ import 'package:tollo2/models/reminder.dart';
 import 'package:tollo2/models/time_register.dart';
 import 'package:tollo2/providers/groups_model.dart';
 import 'package:tollo2/providers/job_model.dart';
+import 'package:tollo2/services/textDirection.dart';
 import 'package:tollo2/widgets/fields/color_picker_field.dart';
 import 'package:tollo2/widgets/fields/date_time_picker_custom.dart';
-import 'package:tollo2/widgets/fields/description_form_field.dart';
-import 'package:tollo2/widgets/fields/duration_picker_custom.dart';
 import 'package:tollo2/widgets/fields/points_form_field.dart';
 import 'package:tollo2/widgets/views/viewJob.dart';
 
@@ -32,7 +31,7 @@ class _NewJobState extends State<NewJob> {
   late TextEditingController _controllerDescription;
   late TextEditingController _controllerPoints;
   late Color color = Theme.of(context).primaryColor;
-
+  bool jobdesdir=false;
   late Job job;
 
   @override
@@ -49,6 +48,9 @@ class _NewJobState extends State<NewJob> {
       color = Color(job.categoryColor);
     }
     _controllerDescription = new TextEditingController(text: job.note!.note);
+    _controllerDescription.addListener(() {setState(() {
+      jobdesdir=isRTL(_controllerDescription.text);
+    }); });
     _controllerPoints = new TextEditingController(
         text: job.points == 0 ? '' : job.points.toString());
   }
@@ -65,6 +67,7 @@ class _NewJobState extends State<NewJob> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+
     return Scaffold(
       body: Form(
         key: _formKey,
@@ -81,8 +84,25 @@ class _NewJobState extends State<NewJob> {
                     )
                   ],
                 ),
-                DescriptionFormField(
-                    controllerDescription: _controllerDescription),
+                TextFormField(
+                  controller: _controllerDescription,
+                  minLines: 2,
+                  maxLines: null,
+                  autofocus: true,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please Enter a Description';
+                    }
+                    return null;
+                  },
+                  decoration: InputDecoration(
+                    hintText: 'Enter a Job Description',
+                    border: InputBorder.none,
+                    focusedBorder: UnderlineInputBorder(),
+                  ),
+                  textInputAction: TextInputAction.next,
+                  textAlign: jobdesdir ? TextAlign.right : TextAlign.left,
+                ),
                 PointsFormField(controllerPoints: _controllerPoints),
                 DateTimePickerCustom(callback: setDeadLine, color: color),
                 ColorPickerFormField(

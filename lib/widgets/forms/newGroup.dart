@@ -4,8 +4,8 @@ import 'package:provider/provider.dart';
 import 'package:tollo2/models/group.dart';
 import 'package:tollo2/models/note.dart';
 import 'package:tollo2/providers/groups_model.dart';
+import 'package:tollo2/services/textDirection.dart';
 import 'package:tollo2/widgets/fields/color_picker_field.dart';
-import 'package:tollo2/widgets/fields/description_form_field.dart';
 
 class NewGroup extends StatefulWidget {
   const NewGroup({Key? key}) : super(key: key);
@@ -19,6 +19,7 @@ class _NewGroupState extends State<NewGroup> {
   late TextEditingController _controllerDescription;
   late Color color = Theme.of(context).primaryColor;
   late Groups group;
+  bool jobdesdir = false;
 
   @override
   void initState() {
@@ -27,6 +28,11 @@ class _NewGroupState extends State<NewGroup> {
     group = new Groups();
     group.note = new Note();
     _controllerDescription = new TextEditingController(text: group.note!.note);
+    _controllerDescription.addListener(() {
+      setState(() {
+        jobdesdir = isRTL(_controllerDescription.text);
+      });
+    });
   }
 
   void setColor(Color c) {
@@ -52,8 +58,25 @@ class _NewGroupState extends State<NewGroup> {
                     )
                   ],
                 ),
-                DescriptionFormField(
-                    controllerDescription: _controllerDescription),
+                TextFormField(
+                  controller: _controllerDescription,
+                  minLines: 2,
+                  maxLines: null,
+                  autofocus: true,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please Enter a Description';
+                    }
+                    return null;
+                  },
+                  decoration: InputDecoration(
+                    hintText: 'Enter a Group Description',
+                    border: InputBorder.none,
+                    focusedBorder: UnderlineInputBorder(),
+                  ),
+                  textInputAction: TextInputAction.next,
+                  textAlign: jobdesdir ? TextAlign.right : TextAlign.left,
+                ),
                 ColorPickerFormField(
                     size: size, color: color, callback: setColor),
                 Container(
@@ -65,8 +88,9 @@ class _NewGroupState extends State<NewGroup> {
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
                         group.categoryColor = color.value;
-                        group.note!.note=_controllerDescription.text;
-                        Provider.of<GroupModel>(context,listen: false).addGroup(group);
+                        group.note!.note = _controllerDescription.text;
+                        Provider.of<GroupModel>(context, listen: false)
+                            .addGroup(group);
                         Navigator.pop(context);
                       }
                     },

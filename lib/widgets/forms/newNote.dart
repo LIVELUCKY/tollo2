@@ -4,7 +4,9 @@ import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:tollo2/models/note.dart';
 import 'package:tollo2/providers/note_model.dart';
-import 'package:tollo2/widgets/fields/description_form_field.dart';
+
+import '../../services/textDirection.dart';
+
 
 class NewNote extends StatefulWidget {
   const NewNote({Key? key, this.note}) : super(key: key);
@@ -18,6 +20,7 @@ class _NewNoteState extends State<NewNote> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   late TextEditingController _controllerDescription;
   late Note note;
+  bool jobdesdir = false;
 
   @override
   void initState() {
@@ -29,6 +32,11 @@ class _NewNoteState extends State<NewNote> {
       note = Note();
     }
     _controllerDescription = new TextEditingController(text: note.note);
+    _controllerDescription.addListener(() {
+      setState(() {
+        jobdesdir = isRTL(_controllerDescription.text);
+      });
+    });
   }
 
   @override
@@ -49,8 +57,25 @@ class _NewNoteState extends State<NewNote> {
                       )
                     ],
                   ),
-                  DescriptionFormField(
-                      controllerDescription: _controllerDescription),
+                  TextFormField(
+                    controller: _controllerDescription,
+                    minLines: 2,
+                    maxLines: null,
+                    autofocus: true,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please Enter a Description';
+                      }
+                      return null;
+                    },
+                    decoration: InputDecoration(
+                      hintText: 'Enter a Note Description',
+                      border: InputBorder.none,
+                      focusedBorder: UnderlineInputBorder(),
+                    ),
+                    textInputAction: TextInputAction.next,
+                    textAlign: jobdesdir ? TextAlign.right : TextAlign.left,
+                  ),
                   Container(
                     width: double.infinity,
                     child: ElevatedButton(
