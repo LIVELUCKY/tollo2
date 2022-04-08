@@ -24,7 +24,7 @@ class GroupsTile extends StatelessWidget {
       },
       child: Card(
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(25.0),
+          borderRadius: BorderRadius.circular(15.0),
           side: BorderSide(
             color: Color(group.categoryColor),
             width: size.aspectRatio * 5,
@@ -33,27 +33,38 @@ class GroupsTile extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Row(children: [
-              Text(
-                formatFull(group.note!.createdAt),
-                style: TextStyle(
-                    fontSize:
-                        Theme.of(context).textTheme.bodyText1!.fontSize! * 0.8),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                children: [
+                  Expanded(
+                    flex: 7,
+                    child: Text(
+                      formatFull(group.note!.createdAt),
+                      style: TextStyle(
+                          fontSize:
+                              Theme.of(context).textTheme.bodyText1!.fontSize! *
+                                  0.8),
+                    ),
+                  ),
+                  Expanded(
+                    flex: 1,
+                    child: Container(
+                        height: size.aspectRatio * 40,
+                        child: VerticalDivider(
+                          thickness: size.aspectRatio * 4,
+                          color: Color(group.categoryColor),
+                        )),
+                  ),
+                  Expanded(
+                    flex: 1,
+                    child: Text(
+                      group.jobs!.length.toString(),
+                    ),
+                  ),
+                ],
               ),
-              Container(
-                decoration: BoxDecoration(
-                  border:
-                      Border.all(width: 2, color: Color(group.categoryColor)),
-                  shape: BoxShape.circle,
-                  // You can use like this way or like the below line
-                  //borderRadius: new BorderRadius.circular(30.0),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(group.jobs!.length.toString()),
-                ),
-              ),
-            ]),
+            ),
             Divider(
               color: Color(group.categoryColor),
               thickness: size.aspectRatio * 4,

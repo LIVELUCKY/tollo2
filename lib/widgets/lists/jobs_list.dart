@@ -68,9 +68,9 @@ class _HomeListState extends State<HomeList> {
     return Card(
       child: Column(
         children: [
-          Row(
+          Row(mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              Expanded(
+              Expanded(flex: 7,
                 child: TextField(
                   onChanged: (value) {
                     searched = value;
@@ -89,7 +89,7 @@ class _HomeListState extends State<HomeList> {
                   ),
                 ),
               ),
-              jobsTreeSwitcher()
+              Expanded(flex: 1,child: jobsTreeSwitcher())
             ],
           ),
           if (widget.widget != null) widget.widget!

@@ -31,60 +31,57 @@ class HomeJobListTile extends StatelessWidget {
           ),
         );
       },
-      child: Flexible(
-        flex: 5,
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(8.0, 16.0, 8.0, 0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'Created at : ' + formatFull(job.note!.createdAt),
-                    style: TextStyle(
-                        fontSize:
-                            Theme.of(context).textTheme.bodyText1!.fontSize! *
-                                0.8),
-                  ),
-                  Row(
-                    children: [
-                      Icon(
-                        CupertinoIcons.color_filter,
-                        color: jobColor,
-                      ),
-                      isRegisterOn(),
-                      if (job.father != null)
-                        Icon(
-                          Icons.account_tree_rounded,
-                          color: Color(job.father!.categoryColor),
-                        )
-                    ],
-                  )
-                ],
-              ),
-            ),
-            Card(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16.0),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: DropDownCustom(
-                  widget: SubstringHighlight(
-                    text: trimTill(job.note!.note, searched),
-                    term: searched,
-                    overflow: TextOverflow.fade,
-                    textStyle: Theme.of(context).textTheme.bodyText1!,
-                    textStyleHighlight: TextStyle(
-                        backgroundColor: Theme.of(context).primaryColorLight),
-                  ),
-                  size: size,
+      child: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(8.0, 16.0, 8.0, 0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Created at : ' + formatFull(job.note!.createdAt),
+                  style: TextStyle(
+                      fontSize:
+                          Theme.of(context).textTheme.bodyText1!.fontSize! *
+                              0.8),
                 ),
+                Row(
+                  children: [
+                    Icon(
+                      CupertinoIcons.color_filter,
+                      color: jobColor,
+                    ),
+                    isRegisterOn(),
+                    if (job.father != null)
+                      Icon(
+                        Icons.account_tree_rounded,
+                        color: Color(job.father!.categoryColor),
+                      )
+                  ],
+                )
+              ],
+            ),
+          ),
+          Card(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16.0),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: DropDownCustom(
+                widget: SubstringHighlight(
+                  text: trimTill(job.note!.note, searched),
+                  term: searched,
+                  overflow: TextOverflow.fade,
+                  textStyle: Theme.of(context).textTheme.bodyText1!,
+                  textStyleHighlight: TextStyle(
+                      backgroundColor: Theme.of(context).primaryColorLight),
+                ),
+                size: size,
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
