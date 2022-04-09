@@ -3,6 +3,7 @@ import 'package:tollo2/models/duration.g.dart';
 import 'package:tollo2/models/group.dart';
 import 'package:tollo2/models/job.dart';
 import 'package:tollo2/models/note.dart';
+import 'package:tollo2/models/pathWithNote.dart';
 import 'package:tollo2/models/reminder.dart';
 import 'package:tollo2/models/time_register.dart';
 import 'package:tollo2/models/track_unit.dart';
@@ -12,7 +13,10 @@ void adapterRegistration() {
   Hive.registerAdapter(TimeTrackUnitAdapter());
   Hive.registerAdapter(TimeRegisterAdapter());
   Hive.registerAdapter(NoteAdapter());
+  Hive.registerAdapter(PathWNoteAdapter());
   Hive.registerAdapter(ReminderAdapter());
+
   Hive.registerAdapter(JobAdapter());
   Hive.registerAdapter(GroupsAdapter());
+
 }

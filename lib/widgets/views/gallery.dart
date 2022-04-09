@@ -21,15 +21,18 @@ class JobGallery extends StatefulWidget {
 
 class _JobGalleryState extends State<JobGallery> {
   final picker = ImagePicker();
+  late Job job2;
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+    job2 = widget.job;
+    Provider.of<JobModel>(context).updateJobs();
     return Scaffold(
       body: GridView.builder(
         scrollDirection: Axis.vertical,
         shrinkWrap: true,
-        itemCount: widget.job.pathsImages.length + 2,
+        itemCount: job2.pathsImages.length + 2,
         gridDelegate:
             SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
         itemBuilder: (context, index) {
@@ -43,9 +46,9 @@ class _JobGalleryState extends State<JobGallery> {
                       await picker.pickImage(source: ImageSource.camera);
                   String file = await saveImage(pickedFile);
                   if (file != '') {
-                    widget.job.pathsImages.insert(0, new PathWNote(file));
+                    job2.pathsImages.insert(0, new PathWNote(file));
                     Provider.of<JobModel>(context, listen: false)
-                        .updateJob(widget.job);
+                        .updateJob(job2);
                     setState(() {});
                   }
                 },
@@ -65,9 +68,9 @@ class _JobGalleryState extends State<JobGallery> {
                       await picker.pickImage(source: ImageSource.gallery);
                   String file = await saveImage(pickedFile);
                   if (file != '') {
-                    widget.job.pathsImages.insert(0, new PathWNote(file));
+                    job2.pathsImages.insert(0, new PathWNote(file));
                     Provider.of<JobModel>(context, listen: false)
-                        .updateJob(widget.job);
+                        .updateJob(job2);
                     setState(() {});
                   }
                 },
@@ -83,9 +86,8 @@ class _JobGalleryState extends State<JobGallery> {
                 bool delete = await Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => new ImageViewer(
-                        job: widget.job,
-                        index: index - 2),
+                    builder: (context) =>
+                        new ImageViewer(job: job2, index: index - 2),
                   ),
                 );
 
@@ -96,7 +98,7 @@ class _JobGalleryState extends State<JobGallery> {
               child: Card(
                 child: ClipRect(
                   child: Image.file(
-                    File(widget.job.pathsImages[index - 2].path),
+                    File(job2.pathsImages[index - 2].path),
                     fit: BoxFit.contain,
                   ),
                 ),

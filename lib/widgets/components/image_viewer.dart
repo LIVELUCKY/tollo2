@@ -54,107 +54,130 @@ class _ImageViewerState extends State<ImageViewer> {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    IconButton(
-                      onPressed: () async {
-                        Navigator.pop(context);
-                      },
-                      icon: Icon(
-                        CupertinoIcons.chevron_back,
-                      ),
-                    ),
-                    IconButton(
-                      onPressed: () async {
-                        bool canDelete = await checkPermissionsStorage();
-                        if (canDelete) {
-                          showDialog(
-                            context: context,
-                            builder: (context) {
-                              return CustomDialog(
-                                  question:
-                                      'Are you sure You want to delete this Image?');
-                            },
-                          ).then((exit) async {
-                            if (exit == null) return;
-
-                            if (exit) {
-                              // user pressed Yes button
-                              await deleteFile(pathToImage.path).then(
-                                (callBack) {
-                                  if (callBack) {
-                                    widget.job.pathsImages.remove(pathToImage);
-                                    Provider.of<JobModel>(context,
-                                            listen: false)
-                                        .updateJob(widget.job);
-                                    if (widget.job.pathsImages
-                                        .asMap()
-                                        .containsKey(currentIndex - 1)) {
-                                      setState(() {
-                                        currentIndex -= 1;
-                                        pathToImage = widget
-                                            .job.pathsImages[currentIndex];
-                                      });
-                                    } else {
-                                      Navigator.pop(context, true);
-                                    }
-                                  }
-                                },
-                              );
-                            } else {
-                              // user pressed No button
-                            }
-                          });
-                        }
-                      },
-                      icon: Icon(
-                        CupertinoIcons.trash_fill,
-                        color: Colors.red.shade400,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Image.file(
-                File(pathToImage.path),
-                fit: BoxFit.contain,
-              ),
-              Text(
-                buildParsePath(pathToImage.path),
-                textScaleFactor: size.aspectRatio * 3.7,
-                style: TextStyle(
-                    fontStyle: FontStyle.italic,
-                    backgroundColor: Colors.grey.withOpacity(0.1)),
-                textAlign: TextAlign.center,
-              ),
-              Card(
+        child: Center(
+          child: SingleChildScrollView(
+            child: GestureDetector(
+              onHorizontalDragUpdate: (details) {
+                int sensitivity = 8;
+                if (details.delta.dx > sensitivity) {
+                  swipe(-1);
+                } else if (details.delta.dx < -sensitivity) {
+                  swipe(1);
+                }
+              },
+              child: Card(
                 child: Column(
                   children: [
-                    Row(children: [
-                      Text('last edited at: ' +
-                          formatFull(pathToImage.createdAt))
-                    ]),
-                    TextField(
-                      decoration: const InputDecoration(
-                        border: UnderlineInputBorder(),
-                        labelText: 'Enter Image Description',
-                      ),
-                      controller: _controller,
-                      textAlign: r ? TextAlign.right : TextAlign.left,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        IconButton(
+                          onPressed: () async {
+                            Navigator.pop(context);
+                          },
+                          icon: Icon(
+                            CupertinoIcons.chevron_back,
+                          ),
+                        ),
+                        IconButton(
+                          onPressed: () async {
+                            bool canDelete = await checkPermissionsStorage();
+                            if (canDelete) {
+                              showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return CustomDialog(
+                                      question:
+                                          'Are you sure You want to delete this Image?');
+                                },
+                              ).then((exit) async {
+                                if (exit == null) return;
+
+                                if (exit) {
+                                  // user pressed Yes button
+                                  await deleteFile(pathToImage.path).then(
+                                    (callBack) {
+                                      if (callBack) {
+                                        widget.job.pathsImages
+                                            .remove(pathToImage);
+                                        Provider.of<JobModel>(context,
+                                                listen: false)
+                                            .updateJob(widget.job);
+                                        if (widget.job.pathsImages
+                                            .asMap()
+                                            .containsKey(currentIndex - 1)) {
+                                          setState(() {
+                                            goTo(-1);
+                                          });
+                                        } else {
+                                          Navigator.pop(context, true);
+                                        }
+                                      }
+                                    },
+                                  );
+                                } else {
+                                  // user pressed No button
+                                }
+                              });
+                            }
+                          },
+                          icon: Icon(
+                            CupertinoIcons.trash_fill,
+                            color: Colors.red.shade400,
+                          ),
+                        ),
+                      ],
                     ),
+                    Image.file(
+                      File(pathToImage.path),
+                      fit: BoxFit.contain,
+                    ),
+                    Text(
+                      buildParsePath(pathToImage.path),
+                      textScaleFactor: size.aspectRatio * 3.7,
+                      style: TextStyle(
+                          fontStyle: FontStyle.italic,
+                          backgroundColor: Colors.grey.withOpacity(0.1)),
+                      textAlign: TextAlign.center,
+                    ),
+                    Column(
+                      children: [
+                        Row(children: [
+                          Text('last edited at: ' +
+                              formatFull(pathToImage.createdAt))
+                        ]),
+                        TextField(
+                          decoration: const InputDecoration(
+                            border: UnderlineInputBorder(),
+                          ),
+                          controller: _controller,
+                          textAlign: r ? TextAlign.right : TextAlign.left,
+                          keyboardType: TextInputType.multiline,
+                          maxLines: null,
+                        ),
+                      ],
+                    )
                   ],
                 ),
-              )
-            ],
+              ),
+            ),
           ),
         ),
       ),
     );
+  }
+
+  void swipe(int x) {
+    if (widget.job.pathsImages.asMap().containsKey(currentIndex + x)) {
+      setState(() {
+        goTo(x);
+      });
+    }
+  }
+
+  void goTo(int x) {
+    currentIndex += x;
+    pathToImage = widget.job.pathsImages[currentIndex];
+    _controller = TextEditingController(text: pathToImage.note);
   }
 }
