@@ -13,6 +13,8 @@ import 'package:tollo2/services/permissions/storage_perm.dart';
 import 'package:tollo2/widgets/components/audio_player.dart';
 import 'package:tollo2/widgets/components/dialog.dart';
 
+import '../../services/textDirection.dart';
+
 class Player extends StatefulWidget {
   const Player(
       {Key? key,
@@ -29,6 +31,26 @@ class Player extends StatefulWidget {
 }
 
 class _PlayerState extends State<Player> {
+  late TextEditingController _controller;
+  bool r = false;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _controller = new TextEditingController(text: widget.pathToAudioFile.note);
+    r = isRTL(_controller.text);
+    _controller.addListener(() {
+      setState(() {
+        r = isRTL(_controller.text);
+        widget.pathToAudioFile.note = _controller.text;
+        widget.pathToAudioFile.createdAt = DateTime.now();
+
+        Provider.of<JobModel>(context, listen: false).updateJob(widget.job);
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     var _labelLocation = TimeLabelLocation.below;
@@ -147,7 +169,15 @@ class _PlayerState extends State<Player> {
                 timeLabelType: _labelType,
               );
             },
-          )
+          ),
+          TextField(
+            decoration: const InputDecoration(
+                border: UnderlineInputBorder(), hintText: 'wright description'),
+            controller: _controller,
+            textAlign: r ? TextAlign.right : TextAlign.left,
+            keyboardType: TextInputType.multiline,
+            maxLines: null,
+          ),
         ],
       ),
     );
