@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:tollo2/models/job.dart';
@@ -86,7 +85,7 @@ class _JobGalleryState extends State<JobGallery> {
                   MaterialPageRoute(
                     builder: (context) => new ImageViewer(
                         job: widget.job,
-                        pathToImage: widget.job.pathsImages[index - 2].path),
+                        index: index - 2),
                   ),
                 );
 

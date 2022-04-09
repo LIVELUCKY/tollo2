@@ -2,7 +2,7 @@ import 'package:hive/hive.dart';
 
 class DurationAdapter extends TypeAdapter<Duration> {
   @override
-  final typeId = 8;
+  final typeId = 9;
 
   @override
   void write(BinaryWriter writer, Duration value) =>
