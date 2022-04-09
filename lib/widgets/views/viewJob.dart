@@ -108,10 +108,11 @@ class _ViewJobState extends State<ViewJob> {
 
                             if (exit) {
                               // user pressed Yes button
-                              Provider.of<JobModel>(context, listen: false)
-                                  .deleteJob(widget.job);
                               Provider.of<GroupModel>(context, listen: false)
                                   .deleteJobFromGroup(widget.job);
+                              Provider.of<JobModel>(context, listen: false)
+                                  .deleteJob(widget.job);
+
                               Navigator.pop(context);
                             } else {
                               // user pressed No button

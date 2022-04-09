@@ -1,7 +1,4 @@
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:tollo2/models/group.dart';
 import 'package:tollo2/models/job.dart';
@@ -28,26 +25,29 @@ class _HomeListState extends State<HomeList> {
   String searched = '';
   bool children = true;
   late List<Job> jobs;
-bool r=false;
+  bool r = false;
+
   @override
   Widget build(BuildContext context) {
     Size size =
         widget.size == null ? MediaQuery.of(context).size : widget.size!;
+    var jobModel = Provider.of<JobModel>(context);
     if (widget.job == null && widget.category == null) {
       if (children) {
-        jobs = Provider.of<JobModel>(context)
-            .jobs
-            .where((element) => element.father == null && !Provider.of<GroupModel>(context)
-            .containedInAGroup(element))
+        jobs = jobModel.jobs
+            .where((element) =>
+                element.father == null &&
+                !Provider.of<GroupModel>(context).containedInAGroup(element))
             .toList();
       } else {
-        jobs = Provider.of<JobModel>(context).jobs;
+        jobs = jobModel.jobs;
       }
     } else {
       if (widget.category != null && widget.job == null) {
         jobs = widget.category!.jobs!;
       } else {
-        jobs = widget.job!.children!;
+
+        jobs =jobModel.getJobChilds(widget.job!);
       }
     }
     jobs = sortJobsByString(jobs, searched);
@@ -70,20 +70,23 @@ bool r=false;
     return Card(
       child: Column(
         children: [
-          Row(mainAxisAlignment: MainAxisAlignment.spaceAround,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              Expanded(flex: 7,
+              Expanded(
+                flex: 7,
                 child: TextField(
                   onChanged: (value) {
                     searched = value;
                     setState(() {
-                      r=isRTL(value);
+                      r = isRTL(value);
                     });
                   },
                   textInputAction: TextInputAction.search,
                   onSubmitted: (value) {
                     setState(() {});
-                  },              textAlign:   r?TextAlign.right:TextAlign.left,
+                  },
+                  textAlign: r ? TextAlign.right : TextAlign.left,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(2.0),
@@ -94,7 +97,7 @@ bool r=false;
                   ),
                 ),
               ),
-              Expanded(flex: 1,child: jobsTreeSwitcher())
+              Expanded(flex: 1, child: jobsTreeSwitcher())
             ],
           ),
           if (widget.widget != null) widget.widget!

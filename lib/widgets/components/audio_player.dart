@@ -8,6 +8,8 @@ import 'package:tollo2/models/job.dart';
 import 'package:tollo2/widgets/components/player.dart';
 import 'package:tollo2/widgets/components/recorder.dart';
 
+import '../../models/pathWithNote.dart';
+
 class AudioPlayerWidget extends StatefulWidget {
   const AudioPlayerWidget({required this.job});
 
@@ -18,7 +20,7 @@ class AudioPlayerWidget extends StatefulWidget {
 }
 
 class _AudioPlayerWidgetState extends State<AudioPlayerWidget> {
-  late List<String> audios;
+  late List<PathWNote> audios;
   Timer? _timer;
   Timer? _ampTimer;
   final _audioRecorder = Record();
@@ -57,7 +59,7 @@ class _AudioPlayerWidgetState extends State<AudioPlayerWidget> {
         itemCount: audios.length + 1,
         itemBuilder: (context, index) {
           if (index == 0)
-            return Recorder(
+            return new Recorder(
               job: widget.job,
               update: () {
                 setState(() {});

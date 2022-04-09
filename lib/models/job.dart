@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
+import 'package:tollo2/models/pathWithNote.dart';
 import 'package:tollo2/models/reminder.dart';
 import 'package:tollo2/models/track_unit.dart';
 import 'package:tollo2/services/files_handling/delete_file.dart';
@@ -28,9 +29,9 @@ class Job extends HiveObject {
   @HiveField(7)
   TimeRegister? register;
   @HiveField(8)
-  List<String> pathsAudios = [];
+  List<PathWNote> pathsAudios = [];
   @HiveField(9)
-  List<String> pathsImages = [];
+  List<PathWNote> pathsImages = [];
   @HiveField(10)
   List<Reminder> reminder=[];
   @HiveField(11)
@@ -84,11 +85,11 @@ class Job extends HiveObject {
   }
 
   Future<void> deleteAll() async {
-    for (String s in pathsImages) {
-      await deleteFile(s);
+    for (PathWNote s in pathsImages) {
+      await deleteFile(s.path);
     }
-    for (String s in pathsAudios) {
-      await deleteFile(s);
+    for (PathWNote s in pathsAudios) {
+      await deleteFile(s.path);
     }
     if (children != null) {
       for (Job j in children!) {

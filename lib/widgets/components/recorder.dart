@@ -8,11 +8,13 @@ import 'package:tollo2/models/job.dart';
 import 'package:tollo2/providers/job_model.dart';
 import 'package:tollo2/services/files_handling/audio_save.dart';
 
+import '../../models/pathWithNote.dart';
+
 class Recorder extends StatefulWidget {
   const Recorder({Key? key, required this.job, required this.update})
       : super(key: key);
   final Job job;
-  final Function() update;
+  final Function update;
 
   @override
   _RecorderState createState() => _RecorderState();
@@ -24,7 +26,7 @@ class _RecorderState extends State<Recorder> {
   int _recordDuration = 0;
   Timer? _timer;
   Timer? _ampTimer;
-  final _audioRecorder = Record();
+  Record _audioRecorder = new Record();
   Amplitude? _amplitude;
 
   Color getColor(double height2, double max) {
@@ -49,7 +51,7 @@ class _RecorderState extends State<Recorder> {
 
   // final buffer = CircularBuffer<AudioWaveBar>(40);
   List<AudioWaveBar> fixedLengthList = List<AudioWaveBar>.filled(
-      60, AudioWaveBar(height: 1.0, color: Colors.blue),
+      45, AudioWaveBar(height: 1.0, color: Colors.white),
       growable: true);
 
   @override
@@ -59,7 +61,8 @@ class _RecorderState extends State<Recorder> {
     var d = height3 * 0.95;
     if (_isRecording) {
       fixedLengthList.removeAt(0);
-      var height2 = (_amplitude!.max - _amplitude!.current).abs();
+      // var height2 = (_amplitude!.max - _amplitude!.current).abs();
+      var height2 = _amplitude!.current.abs();
 
       fixedLengthList.add(AudioWaveBar(
           height: height2 > d ? d : height2, color: getColor(height2, d)));
@@ -80,19 +83,16 @@ class _RecorderState extends State<Recorder> {
           ],
         ),
         if (_isRecording)
-          Container(
-            color: Theme.of(context).cardColor,
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: FittedBox(
-                fit: BoxFit.contain,
-                child: AudioWave(
-                    width: size2.shortestSide * 0.9,
-                    height: height3,
-                    beatRate: Duration(seconds: 5),
-                    alignment: 'bottom',
-                    bars: fixedLengthList),
-              ),
+          FittedBox(
+            fit: BoxFit.contain,
+            child: Card(
+              child: AudioWave(
+                  width: size2.shortestSide * 0.9,
+                  height: height3,
+                  beatRate: Duration(seconds: 1),
+                  animationLoop: 1,
+                  alignment: 'bottom',
+                  bars: fixedLengthList),
             ),
           ),
       ],
@@ -141,7 +141,7 @@ class _RecorderState extends State<Recorder> {
         await _audioRecorder.start(path: path, encoder: AudioEncoder.AAC);
 
         bool isRecording = await _audioRecorder.isRecording();
-        widget.job.pathsAudios.insert(0, path);
+        widget.job.pathsAudios.insert(0, new PathWNote(path));
         Provider.of<JobModel>(context, listen: false).updateJob(widget.job);
         setState(() {
           _isRecording = isRecording;
@@ -162,6 +162,9 @@ class _RecorderState extends State<Recorder> {
 
     setState(() => _isRecording = false);
     widget.update();
+    fixedLengthList = List<AudioWaveBar>.filled(
+        45, AudioWaveBar(height: 1.0, color: Colors.white),
+        growable: true);
   }
 
   void _startTimer() {
@@ -203,12 +206,4 @@ class _RecorderState extends State<Recorder> {
     _stop();
     super.dispose();
   }
-// List<AudioWaveBar> getAudioWaveBars(CircularBuffer<double> buffer) {
-//   List<AudioWaveBar> aux = [];
-//   buffer.forEach((element) {
-//     var height2 = (_amplitude!.max - element).abs();
-//     aux.add(AudioWaveBar( height: height2 > 150 ? 150 : height2, color: Colors.blue));
-//   });
-//   return aux;
-// }
 }

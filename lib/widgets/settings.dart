@@ -73,20 +73,17 @@ class _SettingsWidgetState extends State<SettingsWidget> {
               Divider(),
               createLine([
                 Text('Total Records:'),
-                Text(
-                    '${Provider.of<JobModel>(context).getAudiosTotal().length}'),
+                Text('${Provider.of<JobModel>(context).getAudiosTotal()}'),
               ]),
               Divider(),
               createLine([
                 Text('Total Images:'),
-                Text(
-                    '${Provider.of<JobModel>(context).getImagesTotal().length}'),
+                Text('${Provider.of<JobModel>(context).getImagesTotal()}'),
               ]),
               Divider(),
               createLine([
                 Text('Total Audios:'),
-                Text(
-                    '${Provider.of<JobModel>(context).getAudiosTotal().length}'),
+                Text('${Provider.of<JobModel>(context).getAudiosTotal()}'),
               ]),
               Divider(),
               createLine([

@@ -5,6 +5,7 @@ import 'package:just_audio/just_audio.dart';
 import 'package:provider/provider.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:tollo2/models/job.dart';
+import 'package:tollo2/models/pathWithNote.dart';
 import 'package:tollo2/providers/job_model.dart';
 import 'package:tollo2/services/files_handling/delete_file.dart';
 import 'package:tollo2/services/formatters/file_name_builder.dart';
@@ -19,7 +20,7 @@ class Player extends StatefulWidget {
       required this.job,
       required this.callback})
       : super(key: key);
-  final String pathToAudioFile;
+  final PathWNote pathToAudioFile;
   final Job job;
   final Function() callback;
 
@@ -42,7 +43,7 @@ class _PlayerState extends State<Player> {
                   buffered: playbackEvent.bufferedPosition,
                   total: playbackEvent.duration,
                 ));
-    _audioPlayer.setFilePath(widget.pathToAudioFile);
+    _audioPlayer.setFilePath(widget.pathToAudioFile.path);
 
     return Card(
       child: Column(
@@ -51,7 +52,7 @@ class _PlayerState extends State<Player> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               Text(
-                buildParsePath(widget.pathToAudioFile),
+                buildParsePath(widget.pathToAudioFile.path),
               ),
               IconButton(
                 onPressed: () async {
@@ -69,7 +70,7 @@ class _PlayerState extends State<Player> {
 
                       if (exit) {
                         // user pressed Yes button
-                        await deleteFile(widget.pathToAudioFile).then(
+                        await deleteFile(widget.pathToAudioFile.path).then(
                           (callBack) {
                             if (callBack) {
                               widget.job.pathsAudios

@@ -6,6 +6,7 @@ import 'package:flutter/widgets.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:tollo2/models/job.dart';
+import 'package:tollo2/models/pathWithNote.dart';
 import 'package:tollo2/providers/job_model.dart';
 import 'package:tollo2/services/files_handling/save_image.dart';
 import 'package:tollo2/services/permissions/camera_perm.dart';
@@ -43,7 +44,7 @@ class _JobGalleryState extends State<JobGallery> {
                       await picker.pickImage(source: ImageSource.camera);
                   String file = await saveImage(pickedFile);
                   if (file != '') {
-                    widget.job.pathsImages.insert(0, file);
+                    widget.job.pathsImages.insert(0, new PathWNote(file));
                     Provider.of<JobModel>(context, listen: false)
                         .updateJob(widget.job);
                     setState(() {});
@@ -65,7 +66,7 @@ class _JobGalleryState extends State<JobGallery> {
                       await picker.pickImage(source: ImageSource.gallery);
                   String file = await saveImage(pickedFile);
                   if (file != '') {
-                    widget.job.pathsImages.insert(0, file);
+                    widget.job.pathsImages.insert(0, new PathWNote(file));
                     Provider.of<JobModel>(context, listen: false)
                         .updateJob(widget.job);
                     setState(() {});
@@ -85,7 +86,7 @@ class _JobGalleryState extends State<JobGallery> {
                   MaterialPageRoute(
                     builder: (context) => new ImageViewer(
                         job: widget.job,
-                        pathToImage: widget.job.pathsImages[index - 2]),
+                        pathToImage: widget.job.pathsImages[index - 2].path),
                   ),
                 );
 
@@ -96,7 +97,7 @@ class _JobGalleryState extends State<JobGallery> {
               child: Card(
                 child: ClipRect(
                   child: Image.file(
-                    File(widget.job.pathsImages[index - 2]),
+                    File(widget.job.pathsImages[index - 2].path),
                     fit: BoxFit.contain,
                   ),
                 ),

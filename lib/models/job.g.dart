@@ -25,8 +25,8 @@ class JobAdapter extends TypeAdapter<Job> {
       ..points = fields[5] as int?
       ..deadLine = fields[6] as Reminder?
       ..register = fields[7] as TimeRegister?
-      ..pathsAudios = (fields[8] as List).cast<String>()
-      ..pathsImages = (fields[9] as List).cast<String>()
+      ..pathsAudios = (fields[8] as List).cast<PathWNote>()
+      ..pathsImages = (fields[9] as List).cast<PathWNote>()
       ..reminder = (fields[10] as List).cast<Reminder>()
       ..note = fields[11] as Note?;
   }

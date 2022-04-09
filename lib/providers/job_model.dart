@@ -32,7 +32,6 @@ class JobModel extends ChangeNotifier {
   Future<void> updateJob(Job job) async {
     job.save();
     updateJobs();
-    notifyListeners();
   }
 
   int get jobsCount {
@@ -51,14 +50,14 @@ class JobModel extends ChangeNotifier {
     updateJobs();
   }
 
-  List<String> getAudiosTotal() {
+  int getAudiosTotal() {
     return jobs.fold(
-        [], (previousValue, element) => previousValue + element.pathsAudios);
+        0, (previousValue, element) => previousValue + element.pathsAudios.length);
   }
 
-  List<String> getImagesTotal() {
+  int getImagesTotal() {
     return jobs.fold(
-        [], (previousValue, element) => previousValue + element.pathsImages);
+        0, (previousValue, element) => previousValue + element.pathsImages.length);
   }
 
   int getTotalRemindersLength() {
@@ -68,5 +67,15 @@ class JobModel extends ChangeNotifier {
             previousValue +
             (element.reminder.where((element) => element.remindMe = true))
                 .length);
+  }
+
+  List<Job> getJobChilds(Job job) {
+    var aux;
+    if (job.children == null) {
+      aux = [];
+    } else {
+      aux = job.children!;
+    }
+    return aux;
   }
 }
