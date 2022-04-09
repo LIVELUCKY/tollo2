@@ -172,7 +172,7 @@ class _PlayerState extends State<Player> {
           ),
           TextField(
             decoration: const InputDecoration(
-                border: UnderlineInputBorder(), hintText: 'wright description'),
+                border: UnderlineInputBorder(), hintText: 'write description'),
             controller: _controller,
             textAlign: r ? TextAlign.right : TextAlign.left,
             keyboardType: TextInputType.multiline,

@@ -149,7 +149,7 @@ class _ImageViewerState extends State<ImageViewer> {
                         TextField(
                           decoration: const InputDecoration(
                               border: UnderlineInputBorder(),
-                              hintText: 'wright description'),
+                              hintText: 'write description'),
                           controller: _controller,
                           textAlign: r ? TextAlign.right : TextAlign.left,
                           keyboardType: TextInputType.multiline,
