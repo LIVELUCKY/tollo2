@@ -15,7 +15,6 @@ Future<void> registerNotification(Job job, Reminder reminder) async {
   var androidPlatformChannelSpecifics = AndroidNotificationDetails(
     'alarm_notif',
     'alarm_notif',
-    'Channel for Alarm notification',
     icon: 'codex_logo',
     playSound: true,
     largeIcon: DrawableResourceAndroidBitmap('codex_logo'),

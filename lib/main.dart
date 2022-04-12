@@ -2,7 +2,6 @@ import 'package:easy_dynamic_theme/easy_dynamic_theme.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:tollo2/services/hive_db_mangae/adapter_registration.dart';
 import 'package:tollo2/services/hive_db_mangae/open_boxes.dart';
