@@ -59,7 +59,7 @@ class _AudioPlayerWidgetState extends State<AudioPlayerWidget> {
         itemCount: audios.length + 1,
         itemBuilder: (context, index) {
           if (index == 0)
-            return new Recorder(
+            return Recorder(
               job: widget.job,
               update: () {
                 setState(() {});

@@ -51,7 +51,7 @@ class _RecorderState extends State<Recorder> {
 
   // final buffer = CircularBuffer<AudioWaveBar>(40);
   List<AudioWaveBar> fixedLengthList = List<AudioWaveBar>.filled(
-      45, AudioWaveBar(height: 1.0, color: Colors.white),
+      60, AudioWaveBar(height: 1.0, color: Colors.white),
       growable: true);
 
   @override
@@ -60,12 +60,11 @@ class _RecorderState extends State<Recorder> {
     var height3 = size2.shortestSide * 0.25;
     var d = height3 * 0.95;
     if (_isRecording) {
-      fixedLengthList.removeAt(0);
-      // var height2 = (_amplitude!.max - _amplitude!.current).abs();
-      var height2 = _amplitude!.current.abs();
 
+      var height2 =_amplitude==null?d: (_amplitude!.max - _amplitude!.current).abs();
       fixedLengthList.add(AudioWaveBar(
           height: height2 > d ? d : height2, color: getColor(height2, d)));
+      fixedLengthList.removeAt(0);
     }
 
     //
